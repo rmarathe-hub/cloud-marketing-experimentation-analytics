@@ -265,6 +265,8 @@ def test_run_implemented_week2_analytics_helper(tmp_path):
             "mart_campaign_kpis",
             "mart_ctr_trends",
             "mart_device_app_performance",
+            "mart_forecast_inputs",
+            "mart_forecast_results",
         ):
             count = connection.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
             assert count > 0

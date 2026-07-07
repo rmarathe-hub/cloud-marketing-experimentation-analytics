@@ -28,6 +28,8 @@ POPULATED_MART_TABLES = (
     "mart_ctr_trends",
     "mart_device_app_performance",
     "mart_ab_test_results",
+    "mart_forecast_inputs",
+    "mart_forecast_results",
 )
 
 PENDING_MART_TABLES = tuple(
@@ -517,6 +519,114 @@ def validate_ab_test_mart(
     return results
 
 
+def validate_forecast_marts(
+    connection: duckdb.DuckDBPyConnection,
+    expectations: dict[str, Any],
+    tolerance: float = 0.0001,
+) -> list[ValidationResult]:
+    results: list[ValidationResult] = []
+    expected_staging_rows = expectations["cleaning"]["avazu"]["output_rows"]
+    expected_ctr = expectations["cleaning"]["avazu"]["ctr"]
+
+    inputs_count = get_table_row_count(connection, "mart_forecast_inputs")
+    inputs_populated = inputs_count > 0
+    results.append(
+        ValidationResult(
+            check_name="mart_forecast_inputs_populated",
+            status="pass" if inputs_populated else "fail",
+            expected="> 0",
+            actual=inputs_count,
+            message=(
+                f"mart_forecast_inputs has {inputs_count:,} hourly row(s)"
+                if inputs_populated
+                else "mart_forecast_inputs is empty; run run_ctr_forecast.py"
+            ),
+        )
+    )
+
+    input_impressions = connection.execute(
+        "SELECT COALESCE(SUM(impressions), 0) FROM mart_forecast_inputs"
+    ).fetchone()[0]
+    impressions_match = inputs_populated and int(input_impressions) == int(expected_staging_rows)
+    results.append(
+        ValidationResult(
+            check_name="mart_forecast_inputs_impressions",
+            status="pass" if impressions_match else "fail",
+            expected=expected_staging_rows,
+            actual=int(input_impressions),
+            message=(
+                "mart_forecast_inputs impressions reconcile with staging rows"
+                if impressions_match
+                else "mart_forecast_inputs impressions do not reconcile with staging rows"
+            ),
+        )
+    )
+
+    actual_ctr = connection.execute(
+        """
+        SELECT CASE
+            WHEN SUM(impressions) = 0 THEN 0.0
+            ELSE SUM(clicks)::DOUBLE / SUM(impressions)::DOUBLE
+        END
+        FROM mart_forecast_inputs
+        """
+    ).fetchone()[0]
+    actual_ctr = 0.0 if actual_ctr is None else float(actual_ctr)
+    ctr_passed = inputs_populated and abs(actual_ctr - float(expected_ctr)) <= tolerance
+    results.append(
+        ValidationResult(
+            check_name="mart_forecast_inputs_ctr",
+            status="pass" if ctr_passed else "fail",
+            expected=expected_ctr,
+            actual=round(actual_ctr, 6),
+            message=(
+                f"Forecast input CTR matches cleaning summary ({expected_ctr:.6f})"
+                if ctr_passed
+                else "Forecast input CTR does not match cleaning summary"
+            ),
+        )
+    )
+
+    results_count = get_table_row_count(connection, "mart_forecast_results")
+    results_populated = results_count > 0
+    results.append(
+        ValidationResult(
+            check_name="mart_forecast_results_populated",
+            status="pass" if results_populated else "fail",
+            expected="> 0",
+            actual=results_count,
+            message=(
+                f"mart_forecast_results has {results_count:,} holdout row(s)"
+                if results_populated
+                else "mart_forecast_results is empty; run run_ctr_forecast.py"
+            ),
+        )
+    )
+
+    metric_rows = connection.execute(
+        """
+        SELECT COUNT(*)
+        FROM mart_forecast_results
+        WHERE mae IS NOT NULL AND rmse IS NOT NULL AND model_name IS NOT NULL
+        """
+    ).fetchone()[0]
+    metrics_ready = results_populated and int(metric_rows) == results_count
+    results.append(
+        ValidationResult(
+            check_name="mart_forecast_results_metrics",
+            status="pass" if metrics_ready else "fail",
+            expected=results_count,
+            actual=int(metric_rows),
+            message=(
+                "Forecast results include model metrics and model name"
+                if metrics_ready
+                else "Forecast results missing model metrics or model name"
+            ),
+        )
+    )
+    return results
+
+
 def validate_treatment_groups(
     connection: duckdb.DuckDBPyConnection,
     expectations: dict[str, Any],
@@ -569,6 +679,7 @@ def run_validation(
         checks.extend(validate_campaign_kpi_mart(connection, expectations))
         checks.extend(validate_funnel_segment_marts(connection, expectations))
         checks.extend(validate_ab_test_mart(connection, expectations))
+        checks.extend(validate_forecast_marts(connection, expectations))
         checks.extend(validate_pending_mart_tables_empty(connection))
     finally:
         connection.close()

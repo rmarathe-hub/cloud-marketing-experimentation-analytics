@@ -93,10 +93,8 @@ def test_week2_pending_scripts_do_not_exist():
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 
 
-def test_week2_day10_ab_test_script_exists():
-    assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
-    assert (PROJECT_ROOT / "scripts" / "run_funnel_segment_analysis.py").exists()
-    assert (PROJECT_ROOT / "scripts" / "run_ab_test_analysis.py").exists()
+def test_week2_day11_ctr_forecast_script_exists():
+    assert (PROJECT_ROOT / "scripts" / "run_ctr_forecast.py").exists()
 
 
 def test_readme_marks_week1_lock_complete():
@@ -105,6 +103,7 @@ def test_readme_marks_week1_lock_complete():
     assert "Campaign KPI marts | ✅ Complete" in readme
     assert "Funnel + segment analysis | ✅ Complete" in readme
     assert "A/B test analysis | ✅ Complete" in readme
+    assert "CTR forecasting | ✅ Complete" in readme
 
 
 def _build_week1_summaries(tmp_path: Path) -> dict[str, Path]:

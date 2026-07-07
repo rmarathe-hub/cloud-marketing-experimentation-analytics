@@ -105,6 +105,7 @@ WEEK2_SCRIPTS_IMPLEMENTED = (
     "run_campaign_kpis.py",
     "run_funnel_segment_analysis.py",
     "run_ab_test_analysis.py",
+    "run_ctr_forecast.py",
 )
 
 WEEK2_SCRIPTS_PENDING = tuple(
@@ -125,16 +126,9 @@ DUCKDB_MART_TABLES = (
     "mart_forecast_results",
 )
 
-DUCKDB_MART_TABLES_POPULATED = (
-    "mart_campaign_kpis",
-    "mart_ctr_trends",
-    "mart_device_app_performance",
-    "mart_ab_test_results",
-)
+DUCKDB_MART_TABLES_POPULATED = DUCKDB_MART_TABLES
 
-DUCKDB_MART_TABLES_PENDING = tuple(
-    table for table in DUCKDB_MART_TABLES if table not in DUCKDB_MART_TABLES_POPULATED
-)
+DUCKDB_MART_TABLES_PENDING: tuple[str, ...] = ()
 DUCKDB_ALL_TABLES = DUCKDB_RAW_TABLES + DUCKDB_STAGING_TABLES + DUCKDB_MART_TABLES
 
 S3_UPLOAD_LOCAL_FILES = (
@@ -175,7 +169,7 @@ WEEK1_LOCKED = {
     "mens_email_recipients": 21_307,
     "womens_email_recipients": 21_387,
     "duckdb_table_count": 10,
-    "validation_check_count": 22,
+    "validation_check_count": 25,
     "s3_upload_count": 4,
     "avazu_device_id_unique": 41_413,
     "avazu_app_id_unique": 1_641,
@@ -258,7 +252,6 @@ TRACKED_FORBIDDEN_PATTERNS = [
 ]
 
 README_FORBIDDEN_COMPLETE_PHRASES = [
-    "CTR forecasting | ✅ Complete",
     "Tableau dashboard | ✅ Complete",
     "Excel stakeholder workbook | ✅ Complete",
     "Final README case study | ✅ Complete",
@@ -296,6 +289,7 @@ PATH_CONSTANTS = [
     "CAMPAIGN_KPI_SUMMARY",
     "FUNNEL_SEGMENT_SUMMARY",
     "AB_TEST_SUMMARY",
+    "FORECAST_SUMMARY",
     "WEEK1_DATA_LOCK_DOC",
     "SQL_DIR",
 ]
@@ -602,6 +596,12 @@ def run_implemented_week2_analytics(config, processed_dir: Path) -> None:
         funnel_segment.run_funnel_segment_analysis(
             config=config,
             summary_path=processed_dir / "funnel_segment_summary.json",
+        )
+        import run_ctr_forecast as ctr_forecast
+
+        ctr_forecast.run_ctr_forecast(
+            config=config,
+            summary_path=processed_dir / "forecast_summary.json",
         )
     if hillstrom_rows > 0:
         ab_test.run_ab_test_analysis(

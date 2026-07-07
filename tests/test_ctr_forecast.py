@@ -1,4 +1,4 @@
-"""run_campaign_kpis.py tests for Day 8 campaign KPI mart."""
+"""run_ctr_forecast.py tests for Day 11 CTR forecasting marts."""
 
 from __future__ import annotations
 
@@ -10,13 +10,11 @@ import pytest
 
 import create_duckdb_database as db_setup
 import load_to_duckdb as loader
-import run_campaign_kpis as campaign_kpis
+import run_ctr_forecast as ctr_forecast
 import validate_data as validator
 from clean_avazu_ads import clean_avazu_ads
 from helpers import (
     DUCKDB_MART_TABLES,
-    DUCKDB_MART_TABLES_PENDING,
-    DUCKDB_MART_TABLES_POPULATED,
     WEEK1_LOCKED,
     assert_approx_ratio,
     run_implemented_week2_analytics,
@@ -59,107 +57,83 @@ def _build_tiny_avazu_bundle(tmp_path):
     }
 
 
-def test_campaign_kpi_module_exports_main():
-    assert hasattr(campaign_kpis, "main")
-    assert hasattr(campaign_kpis, "run_campaign_kpis")
+def test_ctr_forecast_module_exports_main():
+    assert hasattr(ctr_forecast, "main")
+    assert hasattr(ctr_forecast, "run_ctr_forecast")
 
 
-def test_run_campaign_kpis_populates_mart(tmp_path):
+def test_run_ctr_forecast_populates_marts(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
-    summary_path = bundle["processed"] / "campaign_kpi_summary.json"
+    summary_path = bundle["processed"] / "forecast_summary.json"
 
-    summary = campaign_kpis.run_campaign_kpis(
+    summary = ctr_forecast.run_ctr_forecast(
         config=bundle["config"],
         summary_path=summary_path,
     )
 
     assert summary["success"] is True
-    assert summary["mart_row_count"] >= 1
-    assert summary["total_impressions"] == bundle["staging_rows"]
+    assert summary["input_row_count"] >= ctr_forecast.MIN_SERIES_LENGTH
+    assert summary["results_row_count"] >= 1
     assert summary_path.exists()
 
     connection = duckdb.connect(str(bundle["config"].database_path), read_only=True)
     try:
-        mart_count = connection.execute(
-            "SELECT COUNT(*) FROM mart_campaign_kpis"
-        ).fetchone()[0]
-        assert mart_count == summary["mart_row_count"]
-        for table_name in DUCKDB_MART_TABLES_PENDING:
-            pending_count = connection.execute(
-                f"SELECT COUNT(*) FROM {table_name}"
-            ).fetchone()[0]
-            assert pending_count == 0
+        for table_name in ("mart_forecast_inputs", "mart_forecast_results"):
+            count = connection.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
+            assert count > 0
     finally:
         connection.close()
 
 
-def test_run_campaign_kpis_ctr_matches_staging(tmp_path):
+def test_forecast_inputs_reconcile_with_staging(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
-    summary = campaign_kpis.run_campaign_kpis(
+    summary = ctr_forecast.run_ctr_forecast(
         config=bundle["config"],
-        summary_path=bundle["processed"] / "campaign_kpi_summary.json",
+        summary_path=bundle["processed"] / "forecast_summary.json",
     )
 
-    connection = duckdb.connect(str(bundle["config"].database_path), read_only=True)
-    try:
-        staging_ctr = connection.execute(
-            "SELECT AVG(CAST(click AS DOUBLE)) FROM stg_ad_events"
-        ).fetchone()[0]
-        mart_ctr = connection.execute(
-            """
-            SELECT CASE
-                WHEN SUM(impressions) = 0 THEN 0.0
-                ELSE SUM(clicks)::DOUBLE / SUM(impressions)::DOUBLE
-            END
-            FROM mart_campaign_kpis
-            """
-        ).fetchone()[0]
-    finally:
-        connection.close()
-
-    assert_approx_ratio(summary["overall_ctr"], float(staging_ctr))
-    assert_approx_ratio(float(mart_ctr), float(staging_ctr))
+    assert summary["total_impressions"] == bundle["staging_rows"]
+    assert summary["selected_metrics"]["mae"] is not None
+    assert summary["selected_metrics"]["rmse"] is not None
 
 
-def test_run_campaign_kpis_is_idempotent(tmp_path):
+def test_compute_error_metrics_handles_zero_actual():
+    metrics = ctr_forecast._compute_error_metrics([0.0, 10.0], [1.0, 8.0])
+    assert metrics["mae"] == 1.5
+    assert metrics["rmse"] is not None
+    assert metrics["mape"] == 20.0
+
+
+def test_run_ctr_forecast_is_idempotent(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
-    summary_path = bundle["processed"] / "campaign_kpi_summary.json"
+    summary_path = bundle["processed"] / "forecast_summary.json"
 
-    first = campaign_kpis.run_campaign_kpis(
-        config=bundle["config"],
-        summary_path=summary_path,
-    )
-    second = campaign_kpis.run_campaign_kpis(
-        config=bundle["config"],
-        summary_path=summary_path,
-    )
+    first = ctr_forecast.run_ctr_forecast(config=bundle["config"], summary_path=summary_path)
+    second = ctr_forecast.run_ctr_forecast(config=bundle["config"], summary_path=summary_path)
 
-    assert first["mart_row_count"] == second["mart_row_count"]
-    assert first["daily_kpis"] == second["daily_kpis"]
+    assert first["selected_model"] == second["selected_model"]
+    assert first["results_row_count"] == second["results_row_count"]
 
 
-def test_run_campaign_kpis_summary_schema(tmp_path):
+def test_forecast_summary_schema(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
-    summary_path = bundle["processed"] / "campaign_kpi_summary.json"
-    campaign_kpis.run_campaign_kpis(config=bundle["config"], summary_path=summary_path)
+    summary_path = bundle["processed"] / "forecast_summary.json"
+    ctr_forecast.run_ctr_forecast(config=bundle["config"], summary_path=summary_path)
 
     payload = json.loads(summary_path.read_text())
     for key in [
         "generated_at",
-        "mart_table",
-        "mart_row_count",
-        "total_impressions",
-        "total_clicks",
-        "overall_ctr",
-        "daily_kpis",
+        "input_row_count",
+        "results_row_count",
+        "selected_model",
+        "selected_metrics",
+        "model_metrics",
         "success",
     ]:
         assert key in payload
-    assert payload["mart_table"] == "mart_campaign_kpis"
-    assert isinstance(payload["daily_kpis"], list)
 
 
-def test_validation_passes_after_campaign_kpis(tmp_path):
+def test_validation_passes_after_forecast_marts(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
     processed = bundle["processed"]
     run_implemented_week2_analytics(bundle["config"], processed)
@@ -186,18 +160,19 @@ def test_validation_passes_after_campaign_kpis(tmp_path):
         summary_path=processed / "data_validation_summary.json",
     )
 
-    campaign_checks = {
+    forecast_checks = {
         check["check_name"]: check
         for check in validation_summary["checks"]
-        if check["check_name"].startswith("mart_campaign_kpis")
+        if check["check_name"].startswith("mart_forecast_")
     }
-    assert campaign_checks["mart_campaign_kpis_populated"]["status"] == "pass"
-    assert campaign_checks["mart_campaign_kpis_ctr"]["status"] == "pass"
+    assert forecast_checks["mart_forecast_inputs_populated"]["status"] == "pass"
+    assert forecast_checks["mart_forecast_results_populated"]["status"] == "pass"
+    assert forecast_checks["mart_forecast_results_metrics"]["status"] == "pass"
 
 
 @pytest.mark.data
 @pytest.mark.slow
-def test_real_campaign_kpi_mart_matches_lock():
+def test_real_forecast_marts_reconcile():
     from helpers import local_duckdb_available
 
     if not local_duckdb_available():
@@ -207,31 +182,39 @@ def test_real_campaign_kpi_mart_matches_lock():
 
     connection = duckdb.connect(str(DUCKDB_DEFAULT_PATH), read_only=True)
     try:
-        mart_count = connection.execute(
-            "SELECT COUNT(*) FROM mart_campaign_kpis"
+        input_count = connection.execute(
+            "SELECT COUNT(*) FROM mart_forecast_inputs"
         ).fetchone()[0]
-        if mart_count == 0:
-            pytest.skip("mart_campaign_kpis not populated; run run_campaign_kpis.py")
+        result_count = connection.execute(
+            "SELECT COUNT(*) FROM mart_forecast_results"
+        ).fetchone()[0]
+        if input_count == 0 or result_count == 0:
+            pytest.skip("Forecast marts not populated; run run_ctr_forecast.py")
 
-        impressions, clicks = connection.execute(
-            "SELECT SUM(impressions), SUM(clicks) FROM mart_campaign_kpis"
-        ).fetchone()
+        impressions = connection.execute(
+            "SELECT SUM(impressions) FROM mart_forecast_inputs"
+        ).fetchone()[0]
         ctr = connection.execute(
             """
             SELECT CASE
                 WHEN SUM(impressions) = 0 THEN 0.0
                 ELSE SUM(clicks)::DOUBLE / SUM(impressions)::DOUBLE
             END
-            FROM mart_campaign_kpis
+            FROM mart_forecast_inputs
             """
         ).fetchone()[0]
     finally:
         connection.close()
 
     assert impressions == WEEK1_LOCKED["avazu_rows"]
-    assert clicks == WEEK1_LOCKED["avazu_clicks"]
     assert_approx_ratio(float(ctr), WEEK1_LOCKED["avazu_ctr_ratio"])
 
 
-def test_populated_mart_tables_constant():
-    assert DUCKDB_MART_TABLES_POPULATED == DUCKDB_MART_TABLES
+def test_all_mart_tables_are_populated_constants():
+    assert len(DUCKDB_MART_TABLES) == 6
+
+
+def test_forecast_methodology_doc_exists():
+    from helpers import DOCS_DIR
+
+    assert (DOCS_DIR / "forecast_methodology.md").is_file()

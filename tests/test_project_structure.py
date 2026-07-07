@@ -66,7 +66,8 @@ def test_readme_status_shows_week1_complete() -> None:
     assert "Campaign KPI marts | ✅ Complete" in readme
     assert "Funnel + segment analysis | ✅ Complete" in readme
     assert "A/B test analysis | ✅ Complete" in readme
-    assert "CTR forecasting | 🔲 Pending" in readme
+    assert "CTR forecasting | ✅ Complete" in readme
+    assert "Tableau dashboard | 🔲 Pending" in readme
 
 
 def test_readme_business_question_present() -> None:

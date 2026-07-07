@@ -213,6 +213,31 @@ Output (gitignored):
 
 ---
 
+## Day 11: CTR forecasting
+
+Build hourly forecast inputs and holdout forecast results:
+
+```bash
+python scripts/run_ctr_forecast.py
+python scripts/validate_data.py
+```
+
+| Source | Target tables |
+|--------|----------------|
+| `stg_ad_events` | `mart_forecast_inputs`, `mart_forecast_results` |
+
+Models compared: `moving_average_3` and `naive_last_hour`. The script selects the
+lowest holdout MAE model and records MAE, RMSE, and MAPE.
+
+Methodology: [forecast_methodology.md](forecast_methodology.md)
+
+Output (gitignored):
+
+- `data/processed/forecast_summary.json`
+
+---
+
 ## Next step
 
-Day 10 A/B test analysis is complete. Proceed to **Day 11: CTR forecasting**.
+Day 11 CTR forecasting is complete. All six mart tables are now populated.
+Proceed to **Day 12: recommendations + executive summary**, then **Day 13 exports**.
