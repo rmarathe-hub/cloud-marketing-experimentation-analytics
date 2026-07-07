@@ -127,6 +127,7 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [duckdb_setup.md](docs/duckdb_setup.md) | Local DuckDB schema and warehouse setup |
 | [week1_data_lock.md](docs/week1_data_lock.md) | Locked Week 1 dataset stats and pipeline contract |
 | [week2_analytics_lock.md](docs/week2_analytics_lock.md) | Locked Week 2 mart stats, exports, and validation |
+| [tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md) | Tableau Desktop build guide (6 dashboard pages) |
 
 ---
 
@@ -277,9 +278,30 @@ python scripts/export_dashboard_data.py
 python scripts/validate_data.py
 python scripts/generate_week2_analytics_lock.py
 
+# Phase 3 — Tableau dashboard
+python scripts/build_tableau_dashboard.py
+
 # Tests
 pytest -q
 ```
+
+---
+
+## Tableau Dashboard
+
+After mart exports exist:
+
+```bash
+python scripts/build_tableau_dashboard.py
+```
+
+This writes:
+
+- `tableau/screenshots/` — six dashboard page PNGs
+- `tableau/dashboard_spec.json` — page-to-data mapping
+- `data/processed/tableau_build_summary.json` — build metadata (gitignored)
+
+For Tableau Desktop workbook steps, see [docs/tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md).
 
 ---
 
@@ -301,7 +323,7 @@ pytest -q
 | Recommendations + executive summary | ✅ Complete |
 | Mart exports for Tableau / Excel | ✅ Complete |
 | Week 2 analytics + exports | ✅ Complete |
-| Tableau dashboard | 🔲 Pending |
+| Tableau dashboard | ✅ Complete |
 | Excel stakeholder workbook | 🔲 Pending |
 | Final README case study | 🔲 Pending |
 

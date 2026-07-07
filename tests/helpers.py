@@ -63,6 +63,7 @@ REQUIRED_DOCS = [
     "forecast_methodology.md",
     "recommendations.md",
     "executive_summary.md",
+    "tableau_dashboard_guide.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -88,6 +89,7 @@ REQUIRED_PACKAGES = [
     "duckdb",
     "boto3",
     "openpyxl",
+    "matplotlib",
     "pytest",
     "dotenv",
 ]
@@ -217,6 +219,7 @@ ALL_SCRIPTS = (
     *REQUIRED_SCRIPTS,
     *WEEK2_SCRIPTS_IMPLEMENTED,
     "generate_week2_analytics_lock.py",
+    "build_tableau_dashboard.py",
 )
 
 VALIDATION_CHECK_NAMES = (
@@ -267,10 +270,8 @@ EXCEL_WORKBOOK_SHEETS = (
 )
 
 PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
-    "Tableau dashboard | ✅ Complete",
     "Excel stakeholder workbook | ✅ Complete",
     "Final README case study | ✅ Complete",
-    "tableau dashboard complete",
     "excel workbook complete",
     "excel polish complete",
     "final readme case study complete",
@@ -278,10 +279,18 @@ PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
     "interview prep complete",
 ]
 
+TABLEAU_SCREENSHOT_FILES = (
+    "01_executive_overview.png",
+    "02_ctr_trends.png",
+    "03_segment_performance.png",
+    "04_ab_test_results.png",
+    "05_forecast.png",
+    "06_recommendations.png",
+)
+
 PHASE3_FORBIDDEN_TRACKED_PATTERNS = (
     r"^tableau/.+\.twbx$",
     r"^tableau/.+\.twb$",
-    r"^tableau/screenshots/.+\.(png|jpg|jpeg|gif|webp)$",
     r"^excel/screenshots/.+\.(png|jpg|jpeg|gif|webp)$",
 )
 
@@ -361,9 +370,12 @@ TRACKED_FORBIDDEN_PATTERNS = [
 ]
 
 README_FORBIDDEN_COMPLETE_PHRASES = [
-    "Tableau dashboard | ✅ Complete",
     "Excel stakeholder workbook | ✅ Complete",
     "Final README case study | ✅ Complete",
+]
+
+README_TABLEAU_COMPLETE_PHRASES = [
+    "Tableau dashboard | ✅ Complete",
 ]
 
 README_WEEK1_COMPLETE_PHRASES = [
@@ -412,12 +424,21 @@ PATH_CONSTANTS = [
     "MART_RECOMMENDATION_MATRIX_CSV",
     "WEEK1_DATA_LOCK_DOC",
     "WEEK2_ANALYTICS_LOCK_DOC",
+    "TABLEAU_DIR",
+    "TABLEAU_SCREENSHOTS_DIR",
+    "TABLEAU_DASHBOARD_SPEC",
+    "TABLEAU_BUILD_SUMMARY",
+    "TABLEAU_DASHBOARD_GUIDE",
+    "TABLEAU_README",
     "SQL_DIR",
 ]
 
 SCRIPTS_WITH_MAIN = [
     name for name in REQUIRED_SCRIPTS if name not in {"paths.py", "cleaning_utils.py"}
-] + list(WEEK2_SCRIPTS_IMPLEMENTED) + ["generate_week2_analytics_lock.py"]
+] + list(WEEK2_SCRIPTS_IMPLEMENTED) + [
+    "generate_week2_analytics_lock.py",
+    "build_tableau_dashboard.py",
+]
 
 SCRIPTS_HELPER_ONLY = ["paths.py", "cleaning_utils.py"]
 
@@ -437,6 +458,7 @@ SECRET_PATTERN_SCAN_EXEMPT = {
     "tests/test_git_hygiene.py",
     "tests/test_script_imports.py",
     "tests/test_upload_to_s3.py",
+    "tests/test_all_scripts_contract.py",
     "tests/test_security_hygiene_extended.py",
     "tests/test_s3_contract_extended.py",
     "tests/test_week1_lock_contract.py",

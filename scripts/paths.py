@@ -34,6 +34,13 @@ WEEK2_ANALYTICS_LOCK_DOC = DOCS_DIR / "week2_analytics_lock.md"
 EXPORT_DASHBOARD_SUMMARY = PROCESSED_DIR / "export_dashboard_summary.json"
 EXCEL_WORKBOOK = PROJECT_ROOT / "excel" / "marketing_executive_workbook.xlsx"
 
+TABLEAU_DIR = PROJECT_ROOT / "tableau"
+TABLEAU_SCREENSHOTS_DIR = TABLEAU_DIR / "screenshots"
+TABLEAU_DASHBOARD_SPEC = TABLEAU_DIR / "dashboard_spec.json"
+TABLEAU_BUILD_SUMMARY = PROCESSED_DIR / "tableau_build_summary.json"
+TABLEAU_DASHBOARD_GUIDE = DOCS_DIR / "tableau_dashboard_guide.md"
+TABLEAU_README = TABLEAU_DIR / "README.md"
+
 MART_CAMPAIGN_KPIS_CSV = MARTS_DIR / "campaign_kpis.csv"
 MART_CTR_TRENDS_CSV = MARTS_DIR / "ctr_trends.csv"
 MART_SEGMENT_PERFORMANCE_CSV = MARTS_DIR / "segment_performance.csv"

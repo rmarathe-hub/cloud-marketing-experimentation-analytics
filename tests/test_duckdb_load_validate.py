@@ -216,7 +216,7 @@ def test_readme_marks_day11_ctr_forecast_complete_not_phase3():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "A/B test analysis | ✅ Complete" in readme
     assert "CTR forecasting | ✅ Complete" in readme
-    assert "Tableau dashboard | 🔲 Pending" in readme
+    assert "Tableau dashboard | ✅ Complete" in readme
 
 
 def test_validate_script_exists_load_script_exists():

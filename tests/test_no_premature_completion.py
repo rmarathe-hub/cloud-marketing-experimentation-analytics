@@ -4,7 +4,14 @@ from __future__ import annotations
 
 import pytest
 
-from helpers import DOCS_DIR, PROJECT_ROOT, README_WEEK2_COMPLETE_PHRASES, WEEK2_SCRIPTS_PENDING, read_text
+from helpers import (
+    DOCS_DIR,
+    PROJECT_ROOT,
+    README_TABLEAU_COMPLETE_PHRASES,
+    README_WEEK2_COMPLETE_PHRASES,
+    WEEK2_SCRIPTS_PENDING,
+    read_text,
+)
 
 pytestmark = [pytest.mark.docs, pytest.mark.unit]
 
@@ -15,13 +22,17 @@ README = read_text(PROJECT_ROOT / "README.md")
 @pytest.mark.parametrize(
     "phrase",
     [
-        "Tableau dashboard | ✅ Complete",
         "Excel stakeholder workbook | ✅ Complete",
         "Final README case study | ✅ Complete",
     ],
 )
 def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
     assert phrase not in README
+
+
+def test_readme_marks_tableau_dashboard_complete() -> None:
+    for phrase in README_TABLEAU_COMPLETE_PHRASES:
+        assert phrase in README
 
 
 def test_readme_marks_week2_analytics_complete() -> None:
@@ -88,6 +99,7 @@ def test_duckdb_pipeline_scripts_exist_with_day13_exports() -> None:
     assert (PROJECT_ROOT / "scripts" / "run_ctr_forecast.py").exists()
     assert (PROJECT_ROOT / "scripts" / "generate_recommendations.py").exists()
     assert (PROJECT_ROOT / "scripts" / "export_dashboard_data.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "build_tableau_dashboard.py").exists()
     for script_name in WEEK2_SCRIPTS_PENDING:
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 

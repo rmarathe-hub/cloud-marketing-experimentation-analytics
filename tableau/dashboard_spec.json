@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-07-07T19:22:34.118754+00:00",
+  "workbook_name": "marketing_analytics_dashboard.twbx",
+  "data_connection": "data/exports",
+  "connection_type": "text/csv",
+  "pages": [
+    {
+      "screenshot": "01_executive_overview.png",
+      "title": "Executive Overview",
+      "primary_data": "campaign_kpis.csv"
+    },
+    {
+      "screenshot": "02_ctr_trends.png",
+      "title": "CTR Trends by Hour",
+      "primary_data": "ctr_trends.csv"
+    },
+    {
+      "screenshot": "03_segment_performance.png",
+      "title": "Segment Performance",
+      "primary_data": "segment_performance.csv"
+    },
+    {
+      "screenshot": "04_ab_test_results.png",
+      "title": "Email A/B Test Results",
+      "primary_data": "ab_test_results.csv"
+    },
+    {
+      "screenshot": "05_forecast.png",
+      "title": "Click Forecast",
+      "primary_data": "forecast_results.csv"
+    },
+    {
+      "screenshot": "06_recommendations.png",
+      "title": "Recommendations Matrix",
+      "primary_data": "recommendation_matrix.csv"
+    }
+  ],
+  "tableau_desktop_steps": [
+    "Connect to data/exports/*.csv using Tableau text connector",
+    "Create six dashboards matching tableau/screenshots references",
+    "Save packaged workbook as tableau/marketing_analytics_dashboard.twbx (local only)"
+  ]
+}

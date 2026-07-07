@@ -15,11 +15,13 @@ from helpers import (
     PHASE3_FORBIDDEN_TRACKED_PATTERNS,
     PROJECT_ROOT,
     README_FORBIDDEN_COMPLETE_PHRASES,
+    README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK1_COMPLETE_PHRASES,
     README_WEEK2_COMPLETE_PHRASES,
     REQUIRED_DOCS,
     REQUIRED_ROOT_FILES,
     SQL_SCHEMA_FILES,
+    TABLEAU_SCREENSHOT_FILES,
     VALIDATION_CHECK_NAMES,
     WEEK1_LOCKED,
     WEEK2_LOCKED,
@@ -78,8 +80,9 @@ def test_readme_does_not_claim_phase3_phrases(phrase: str) -> None:
     assert phrase.lower() not in README.lower()
 
 
-def test_readme_lists_tableau_pending() -> None:
-    assert "Tableau dashboard | 🔲 Pending" in README
+def test_readme_lists_tableau_complete() -> None:
+    for phrase in README_TABLEAU_COMPLETE_PHRASES:
+        assert phrase in README
 
 
 def test_readme_lists_excel_polish_pending() -> None:
@@ -113,6 +116,14 @@ def test_phase3_deliverables_not_tracked(pattern: str) -> None:
     regex = re.compile(pattern)
     matches = [path for path in git_tracked_files() if regex.search(path)]
     assert matches == [], f"Tracked Phase 3 artifact(s): {matches}"
+
+
+@pytest.mark.parametrize("filename", TABLEAU_SCREENSHOT_FILES)
+def test_tableau_screenshot_files_exist(filename: str) -> None:
+    path = PROJECT_ROOT / "tableau" / "screenshots" / filename
+    if not path.is_file():
+        pytest.skip("Run: python scripts/build_tableau_dashboard.py")
+    assert path.stat().st_size > 5_000
 
 
 def test_no_tableau_workbook_tracked() -> None:
@@ -152,16 +163,16 @@ def test_week1_locked_row_counts_in_week1_lock_doc() -> None:
     assert f"{WEEK1_LOCKED['hillstrom_rows']:,}" in lock
 
 
-def test_week2_lock_doc_states_phase3_not_started() -> None:
+def test_week2_lock_doc_states_phase3_boundary() -> None:
     lock = read_text(DOCS_DIR / "week2_analytics_lock.md").lower()
     assert "phase 3 boundary" in lock
+    assert "excel" in lock
     assert "not started" in lock
-    assert "tableau dashboard" in lock
 
 
-def test_recommendations_doc_does_not_claim_tableau_complete() -> None:
+def test_recommendations_doc_does_not_claim_excel_complete() -> None:
     text = read_text(DOCS_DIR / "recommendations.md").lower()
-    assert "tableau dashboard | ✅ complete" not in text
+    assert "excel stakeholder workbook | ✅ complete" not in text
 
 
 def test_executive_summary_mentions_phase3_pending() -> None:

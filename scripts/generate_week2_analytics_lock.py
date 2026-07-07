@@ -219,13 +219,13 @@ Checks passed: **{validation.get('passed_count', 0)} / {validation.get('passed_c
 
 ## Phase 3 boundary
 
-Week 2 analytics and exports end here. The following are **not started**:
+Week 2 analytics and exports end here. Phase 3 status:
 
-- Tableau dashboard (6 pages)
-- Excel stakeholder workbook polish (pivot tables, screenshots)
-- Final README case study
+- Tableau dashboard (6 pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
+- Excel stakeholder workbook polish (pivot tables, screenshots) — **not started**
+- Final README case study — **not started**
 
-Proceed to Phase 3 only after this lock document matches your local validation output.
+Proceed with remaining Phase 3 items after this lock document matches your local validation output.
 """
 
 

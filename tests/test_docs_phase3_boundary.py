@@ -73,9 +73,9 @@ def test_duckdb_setup_covers_week2_pipeline() -> None:
         assert script in text
 
 
-def test_project_plan_does_not_mark_tableau_complete() -> None:
+def test_project_plan_does_not_mark_excel_complete() -> None:
     text = read_text(DOCS_DIR / "project_plan.md")
-    assert "Tableau dashboard | ✅ Complete" not in text
+    assert "Excel stakeholder workbook | ✅ Complete" not in text
 
 
 def test_readme_does_not_claim_resume_docs_exist() -> None:
