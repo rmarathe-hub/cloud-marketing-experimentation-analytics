@@ -84,8 +84,8 @@ def test_reimport_is_stable(script_name: str) -> None:
     assert first is second
 
 
-def test_all_scripts_count_is_nineteen() -> None:
-    assert len(ALL_SCRIPTS) == 19
+def test_all_scripts_count_is_twenty() -> None:
+    assert len(ALL_SCRIPTS) == 20
 
 
 def test_scripts_directory_on_pythonpath() -> None:

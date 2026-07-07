@@ -14,6 +14,7 @@ from helpers import (
     PHASE3_FORBIDDEN_COMPLETE_PHRASES,
     PHASE3_FORBIDDEN_TRACKED_PATTERNS,
     PROJECT_ROOT,
+    README_EXCEL_COMPLETE_PHRASES,
     README_FORBIDDEN_COMPLETE_PHRASES,
     README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK1_COMPLETE_PHRASES,
@@ -22,6 +23,7 @@ from helpers import (
     REQUIRED_ROOT_FILES,
     SQL_SCHEMA_FILES,
     TABLEAU_SCREENSHOT_FILES,
+    EXCEL_SCREENSHOT_FILES,
     VALIDATION_CHECK_NAMES,
     WEEK1_LOCKED,
     WEEK2_LOCKED,
@@ -85,8 +87,9 @@ def test_readme_lists_tableau_complete() -> None:
         assert phrase in README
 
 
-def test_readme_lists_excel_polish_pending() -> None:
-    assert "Excel stakeholder workbook | 🔲 Pending" in README
+def test_readme_lists_excel_workbook_complete() -> None:
+    for phrase in README_EXCEL_COMPLETE_PHRASES:
+        assert phrase in README
 
 
 def test_readme_lists_final_case_study_complete() -> None:
@@ -122,6 +125,13 @@ def test_phase3_deliverables_not_tracked(pattern: str) -> None:
 def test_tableau_screenshot_files_exist(filename: str) -> None:
     path = PROJECT_ROOT / "tableau" / "screenshots" / filename
     assert path.is_file(), f"Missing required screenshot: {filename}"
+    assert path.stat().st_size > 5_000
+
+
+@pytest.mark.parametrize("filename", EXCEL_SCREENSHOT_FILES)
+def test_excel_screenshot_files_exist(filename: str) -> None:
+    path = PROJECT_ROOT / "excel" / "screenshots" / filename
+    assert path.is_file(), f"Missing required Excel screenshot: {filename}"
     assert path.stat().st_size > 5_000
 
 
@@ -165,9 +175,8 @@ def test_week1_locked_row_counts_in_week1_lock_doc() -> None:
 def test_week2_lock_doc_states_phase3_boundary() -> None:
     lock = read_text(DOCS_DIR / "week2_analytics_lock.md").lower()
     assert "phase 3 boundary" in lock
-    assert "excel" in lock
-    assert "not started" in lock
     assert "screenshot" in lock
+    assert "complete" in lock
 
 
 def test_recommendations_doc_does_not_claim_excel_complete() -> None:

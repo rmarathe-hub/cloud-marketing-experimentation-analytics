@@ -14,7 +14,9 @@ from typing import Any
 import duckdb
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import Font
+from openpyxl.chart import BarChart, Reference
+from openpyxl.styles import Alignment, Font, PatternFill
+from openpyxl.utils import get_column_letter
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 from create_duckdb_database import DatabaseConfig, _display_path, load_config
@@ -173,8 +175,93 @@ def _write_dataframe_sheet(workbook: Workbook, sheet_name: str, frame: pd.DataFr
     worksheet = workbook.create_sheet(title=sheet_name)
     for row in dataframe_to_rows(frame, index=False, header=True):
         worksheet.append(row)
+    _format_header_row(worksheet)
+    _autosize_columns(worksheet)
+    worksheet.freeze_panes = "A2"
+
+
+def _format_header_row(worksheet) -> None:
+    header_fill = PatternFill("solid", fgColor="1F4E79")
+    header_font = Font(bold=True, color="FFFFFF")
     for cell in worksheet[1]:
-        cell.font = Font(bold=True)
+        cell.font = header_font
+        cell.fill = header_fill
+        cell.alignment = Alignment(horizontal="center")
+
+
+def _autosize_columns(worksheet, max_width: int = 42) -> None:
+    for column_cells in worksheet.columns:
+        letter = get_column_letter(column_cells[0].column)
+        max_length = max(len(str(cell.value or "")) for cell in column_cells)
+        worksheet.column_dimensions[letter].width = min(max_length + 2, max_width)
+
+
+def _build_executive_summary_sheet(
+    workbook: Workbook,
+    campaign_frame: pd.DataFrame,
+    recommendations_frame: pd.DataFrame,
+) -> None:
+    worksheet = workbook.create_sheet(title="Executive_Summary", index=0)
+    bold = Font(bold=True, size=12)
+    title_font = Font(bold=True, size=14, color="1F4E79")
+
+    row = campaign_frame.iloc[0]
+    action_counts = recommendations_frame["action"].value_counts()
+
+    worksheet["A1"] = "Marketing Executive Workbook — Summary"
+    worksheet["A1"].font = title_font
+    worksheet["A3"] = "Metric"
+    worksheet["B3"] = "Value"
+    worksheet["A3"].font = bold
+    worksheet["B3"].font = bold
+
+    summary_rows = [
+        ("Impressions", f"{int(row['impressions']):,}"),
+        ("Clicks", f"{int(row['clicks']):,}"),
+        ("Portfolio CTR", f"{float(row['ctr']) * 100:.2f}%"),
+        ("Recommendations", str(len(recommendations_frame))),
+        ("Scale actions", str(int(action_counts.get("Scale", 0)))),
+        ("Pause actions", str(int(action_counts.get("Pause", 0)))),
+        ("Retest actions", str(int(action_counts.get("Retest", 0)))),
+    ]
+    for offset, (label, value) in enumerate(summary_rows, start=4):
+        worksheet.cell(row=offset, column=1, value=label)
+        worksheet.cell(row=offset, column=2, value=value)
+
+    worksheet["A12"] = "Notes"
+    worksheet["A12"].font = bold
+    worksheet["A13"] = (
+        "Stakeholder workbook built from DuckDB mart exports. "
+        "Forecast MAPE is directional only on single-day Avazu data."
+    )
+    _autosize_columns(worksheet)
+
+
+def _build_pivot_recommendations_sheet(workbook: Workbook, recommendations_frame: pd.DataFrame) -> None:
+    worksheet = workbook.create_sheet(title="Pivot_Recommendations")
+    pivot = (
+        recommendations_frame.groupby("action", as_index=False)
+        .size()
+        .rename(columns={"size": "recommendation_count"})
+        .sort_values("action")
+    )
+
+    for row in dataframe_to_rows(pivot, index=False, header=True):
+        worksheet.append(row)
+    _format_header_row(worksheet)
+    _autosize_columns(worksheet)
+
+    chart = BarChart()
+    chart.title = "Recommendations by Action"
+    chart.y_axis.title = "Count"
+    chart.x_axis.title = "Action"
+    data = Reference(worksheet, min_col=2, min_row=1, max_row=len(pivot) + 1)
+    categories = Reference(worksheet, min_col=1, min_row=2, max_row=len(pivot) + 1)
+    chart.add_data(data, titles_from_data=True)
+    chart.set_categories(categories)
+    chart.height = 8
+    chart.width = 14
+    worksheet.add_chart(chart, "D2")
 
 
 def _build_ab_calculator_sheet(workbook: Workbook, ab_frame: pd.DataFrame) -> None:
@@ -252,6 +339,19 @@ def _build_ab_calculator_sheet(workbook: Workbook, ab_frame: pd.DataFrame) -> No
     worksheet["C16"] = "=IF(B14=0,\"\",(C14-B14)/B14)"
     worksheet["D16"] = "=IF(B14=0,\"\",(D14-B14)/B14)"
 
+    _autosize_columns(worksheet)
+    for row_idx in range(4, 11):
+        for col_idx in range(2, 5):
+            cell = worksheet.cell(row=row_idx, column=col_idx)
+            if isinstance(cell.value, float) and row_idx in {6, 7, 8}:
+                cell.number_format = "0.00%"
+            elif isinstance(cell.value, float) and row_idx in {5, 10}:
+                cell.number_format = "#,##0"
+    for col_idx in range(2, 5):
+        worksheet.cell(row=14, column=col_idx).number_format = "0.00%"
+        worksheet.cell(row=15, column=col_idx).number_format = "0.00%"
+        worksheet.cell(row=16, column=col_idx).number_format = "0.00%"
+
 
 def build_excel_workbook(
     frames: dict[str, pd.DataFrame],
@@ -262,14 +362,16 @@ def build_excel_workbook(
     default_sheet = workbook.active
     workbook.remove(default_sheet)
 
+    recommendations_frame = pd.DataFrame(recommendations_summary["recommendations"])
+
+    _build_executive_summary_sheet(workbook, frames["campaign_kpis"], recommendations_frame)
     _write_dataframe_sheet(workbook, "Campaign_KPIs", frames["campaign_kpis"])
     _write_dataframe_sheet(workbook, "CTR_Trends", frames["ctr_trends"])
     _write_dataframe_sheet(workbook, "Segment_Performance", frames["segment_performance"])
     _write_dataframe_sheet(workbook, "AB_Test_Results", frames["ab_test_results"])
     _write_dataframe_sheet(workbook, "Forecast_Results", frames["forecast_results"])
-
-    recommendations_frame = pd.DataFrame(recommendations_summary["recommendations"])
     _write_dataframe_sheet(workbook, "Recommendations", recommendations_frame)
+    _build_pivot_recommendations_sheet(workbook, recommendations_frame)
     _build_ab_calculator_sheet(workbook, frames["ab_test_results"])
 
     excel_path.parent.mkdir(parents=True, exist_ok=True)

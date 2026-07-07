@@ -15,6 +15,7 @@ EXTRA_GITIGNORE_FRAGMENTS = [
     "data/exports/*",
     "excel/*.xlsx",
     "excel/*.xlsm",
+    "!excel/screenshots/",
     "*.twbx",
     "*.twb",
     "tableau/*.twbx",

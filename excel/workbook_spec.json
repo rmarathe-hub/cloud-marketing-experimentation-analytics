@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-07-07T21:37:09.554549+00:00",
+  "workbook_name": "marketing_executive_workbook.xlsx",
+  "data_connection": "data/exports",
+  "screenshots_dir": "excel/screenshots",
+  "pages": [
+    {
+      "screenshot": "01_executive_summary.png",
+      "title": "Executive Summary",
+      "primary_data": "campaign_kpis.csv"
+    },
+    {
+      "screenshot": "02_campaign_kpis.png",
+      "title": "Campaign KPIs",
+      "primary_data": "ctr_trends.csv"
+    },
+    {
+      "screenshot": "03_ab_test_results.png",
+      "title": "A/B Test Results",
+      "primary_data": "segment_performance.csv"
+    },
+    {
+      "screenshot": "04_recommendations.png",
+      "title": "Recommendations Matrix",
+      "primary_data": "ab_test_results.csv"
+    },
+    {
+      "screenshot": "05_pivot_recommendations.png",
+      "title": "Pivot Recommendations",
+      "primary_data": "forecast_results.csv"
+    },
+    {
+      "screenshot": "06_ab_calculator.png",
+      "title": "A/B Calculator",
+      "primary_data": "recommendation_matrix.csv"
+    }
+  ],
+  "notes": [
+    "PNG screenshots are the tracked portfolio artifact.",
+    "The .xlsx workbook is local/gitignored and optional."
+  ]
+}

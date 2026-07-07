@@ -217,6 +217,7 @@ def test_readme_marks_day11_ctr_forecast_complete_not_phase3():
     assert "A/B test analysis | ✅ Complete" in readme
     assert "CTR forecasting | ✅ Complete" in readme
     assert "Tableau dashboard (screenshots) | ✅ Complete" in readme
+    assert "Excel stakeholder workbook (screenshots) | ✅ Complete" in readme
 
 
 def test_validate_script_exists_load_script_exists():

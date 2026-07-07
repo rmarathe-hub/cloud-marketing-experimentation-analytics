@@ -52,6 +52,7 @@ tableau/*.twbx
 # Excel outputs (keep screenshots only)
 excel/*.xlsx
 excel/*.xlsm
+!excel/screenshots/
 
 # Logs
 *.log

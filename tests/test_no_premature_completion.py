@@ -8,6 +8,7 @@ from helpers import (
     DOCS_DIR,
     PROJECT_ROOT,
     README_CASE_STUDY_COMPLETE_PHRASES,
+    README_EXCEL_COMPLETE_PHRASES,
     README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK2_COMPLETE_PHRASES,
     WEEK2_SCRIPTS_PENDING,
@@ -20,16 +21,6 @@ pytestmark = [pytest.mark.docs, pytest.mark.unit]
 README = read_text(PROJECT_ROOT / "README.md")
 
 
-@pytest.mark.parametrize(
-    "phrase",
-    [
-        "Excel stakeholder workbook | ✅ Complete",
-    ],
-)
-def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
-    assert phrase not in README
-
-
 def test_readme_marks_tableau_dashboard_complete() -> None:
     for phrase in README_TABLEAU_COMPLETE_PHRASES:
         assert phrase in README
@@ -37,6 +28,11 @@ def test_readme_marks_tableau_dashboard_complete() -> None:
 
 def test_readme_marks_final_case_study_complete() -> None:
     for phrase in README_CASE_STUDY_COMPLETE_PHRASES:
+        assert phrase in README
+
+
+def test_readme_marks_excel_workbook_complete() -> None:
+    for phrase in README_EXCEL_COMPLETE_PHRASES:
         assert phrase in README
 
 
@@ -105,6 +101,7 @@ def test_duckdb_pipeline_scripts_exist_with_day13_exports() -> None:
     assert (PROJECT_ROOT / "scripts" / "generate_recommendations.py").exists()
     assert (PROJECT_ROOT / "scripts" / "export_dashboard_data.py").exists()
     assert (PROJECT_ROOT / "scripts" / "build_tableau_dashboard.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "build_excel_workbook_screenshots.py").exists()
     for script_name in WEEK2_SCRIPTS_PENDING:
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 

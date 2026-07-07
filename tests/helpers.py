@@ -64,6 +64,7 @@ REQUIRED_DOCS = [
     "recommendations.md",
     "executive_summary.md",
     "tableau_dashboard_guide.md",
+    "excel_workbook_guide.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -220,6 +221,7 @@ ALL_SCRIPTS = (
     *WEEK2_SCRIPTS_IMPLEMENTED,
     "generate_week2_analytics_lock.py",
     "build_tableau_dashboard.py",
+    "build_excel_workbook_screenshots.py",
 )
 
 VALIDATION_CHECK_NAMES = (
@@ -260,22 +262,30 @@ MART_CSV_EXPORTS = {
 }
 
 EXCEL_WORKBOOK_SHEETS = (
+    "Executive_Summary",
     "Campaign_KPIs",
     "CTR_Trends",
     "Segment_Performance",
     "AB_Test_Results",
     "Forecast_Results",
     "Recommendations",
+    "Pivot_Recommendations",
     "AB_Calculator",
 )
 
 PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
-    "Excel stakeholder workbook | ✅ Complete",
-    "excel workbook complete",
-    "excel polish complete",
     "resume bullets complete",
     "interview prep complete",
 ]
+
+EXCEL_SCREENSHOT_FILES = (
+    "01_executive_summary.png",
+    "02_campaign_kpis.png",
+    "03_ab_test_results.png",
+    "04_recommendations.png",
+    "05_pivot_recommendations.png",
+    "06_ab_calculator.png",
+)
 
 TABLEAU_SCREENSHOT_FILES = (
     "01_executive_overview.png",
@@ -311,10 +321,18 @@ README_TWBX_FORBIDDEN_PHRASES = [
     "forecast is reliable for deployment",
 ]
 
+README_XLSX_FORBIDDEN_PHRASES = [
+    ".xlsx is included",
+    ".xlsx is required",
+    "xlsx is committed",
+    "xlsx is tracked",
+    "the .xlsx is the submitted deliverable",
+    "workbook is required to reproduce",
+]
+
 PHASE3_FORBIDDEN_TRACKED_PATTERNS = (
     r"^tableau/.+\.twbx$",
     r"^tableau/.+\.twb$",
-    r"^excel/screenshots/.+\.(png|jpg|jpeg|gif|webp)$",
 )
 
 HILLSTROM_RAW_SEGMENTS = {
@@ -392,12 +410,14 @@ TRACKED_FORBIDDEN_PATTERNS = [
     r"\.hyper$",
 ]
 
-README_FORBIDDEN_COMPLETE_PHRASES = [
-    "Excel stakeholder workbook | ✅ Complete",
-]
+README_FORBIDDEN_COMPLETE_PHRASES: list[str] = []
 
 README_TABLEAU_COMPLETE_PHRASES = [
     "Tableau dashboard (screenshots) | ✅ Complete",
+]
+
+README_EXCEL_COMPLETE_PHRASES = [
+    "Excel stakeholder workbook (screenshots) | ✅ Complete",
 ]
 
 README_WEEK1_COMPLETE_PHRASES = [
@@ -452,6 +472,12 @@ PATH_CONSTANTS = [
     "TABLEAU_BUILD_SUMMARY",
     "TABLEAU_DASHBOARD_GUIDE",
     "TABLEAU_README",
+    "EXCEL_DIR",
+    "EXCEL_SCREENSHOTS_DIR",
+    "EXCEL_WORKBOOK_SPEC",
+    "EXCEL_BUILD_SUMMARY",
+    "EXCEL_WORKBOOK_GUIDE",
+    "EXCEL_README",
     "SQL_DIR",
 ]
 
@@ -460,6 +486,7 @@ SCRIPTS_WITH_MAIN = [
 ] + list(WEEK2_SCRIPTS_IMPLEMENTED) + [
     "generate_week2_analytics_lock.py",
     "build_tableau_dashboard.py",
+    "build_excel_workbook_screenshots.py",
 ]
 
 SCRIPTS_HELPER_ONLY = ["paths.py", "cleaning_utils.py"]

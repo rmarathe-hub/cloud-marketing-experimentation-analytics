@@ -34,6 +34,13 @@ WEEK2_ANALYTICS_LOCK_DOC = DOCS_DIR / "week2_analytics_lock.md"
 EXPORT_DASHBOARD_SUMMARY = PROCESSED_DIR / "export_dashboard_summary.json"
 EXCEL_WORKBOOK = PROJECT_ROOT / "excel" / "marketing_executive_workbook.xlsx"
 
+EXCEL_DIR = PROJECT_ROOT / "excel"
+EXCEL_SCREENSHOTS_DIR = EXCEL_DIR / "screenshots"
+EXCEL_WORKBOOK_SPEC = EXCEL_DIR / "workbook_spec.json"
+EXCEL_BUILD_SUMMARY = PROCESSED_DIR / "excel_build_summary.json"
+EXCEL_WORKBOOK_GUIDE = DOCS_DIR / "excel_workbook_guide.md"
+EXCEL_README = EXCEL_DIR / "README.md"
+
 TABLEAU_DIR = PROJECT_ROOT / "tableau"
 TABLEAU_SCREENSHOTS_DIR = TABLEAU_DIR / "screenshots"
 TABLEAU_DASHBOARD_SPEC = TABLEAU_DIR / "dashboard_spec.json"

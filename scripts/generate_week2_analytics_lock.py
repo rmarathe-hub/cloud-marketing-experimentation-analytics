@@ -221,11 +221,11 @@ Checks passed: **{validation.get('passed_count', 0)} / {validation.get('passed_c
 
 Week 2 analytics and exports end here. Phase 3 status:
 
-- Tableau dashboard (6 pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
-- Excel stakeholder workbook polish (pivot tables, screenshots) — **not started**
-- Final README case study — **not started**
+- Tableau dashboard screenshots (6 PNG pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
+- Excel workbook screenshots (6 PNG pages) — **complete** (`excel/screenshots/`, `docs/excel_workbook_guide.md`)
+- Final README case study — **complete** (Key Findings section in README)
 
-Proceed with remaining Phase 3 items after this lock document matches your local validation output.
+The Tableau `.twbx` and Excel `.xlsx` workbooks are local/gitignored and optional; PNG screenshots are the tracked portfolio artifacts.
 """
 
 

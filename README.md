@@ -128,6 +128,7 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [week1_data_lock.md](docs/week1_data_lock.md) | Locked Week 1 dataset stats and pipeline contract |
 | [week2_analytics_lock.md](docs/week2_analytics_lock.md) | Locked Week 2 mart stats, exports, and validation |
 | [tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md) | Tableau Desktop build guide (6 dashboard pages) |
+| [excel_workbook_guide.md](docs/excel_workbook_guide.md) | Excel executive workbook and screenshot guide |
 
 ---
 
@@ -278,12 +279,70 @@ python scripts/export_dashboard_data.py
 python scripts/validate_data.py
 python scripts/generate_week2_analytics_lock.py
 
-# Phase 3 — Tableau dashboard
+# Phase 3 — Tableau + Excel screenshots
 python scripts/build_tableau_dashboard.py
+python scripts/build_excel_workbook_screenshots.py
 
 # Tests
 pytest -q
 ```
+
+---
+
+---
+
+## Excel Executive Workbook
+
+Excel workbook screenshots built from DuckDB mart CSV exports (`data/exports/`). **The tracked portfolio artifact is the PNG screenshot set** in `excel/screenshots/`. The Excel file (`.xlsx`) is local/gitignored and not required to reproduce the code pipeline.
+
+Regenerate after export changes:
+
+```bash
+python scripts/export_dashboard_data.py
+python scripts/build_excel_workbook_screenshots.py
+```
+
+The polished local workbook (`excel/marketing_executive_workbook.xlsx`) includes an executive summary, formatted data sheets, a recommendations pivot with chart, and an A/B scenario calculator. See [docs/excel_workbook_guide.md](docs/excel_workbook_guide.md).
+
+---
+
+## Excel Workbook Screenshots
+
+### 1. Executive summary
+
+500K impressions, 82,037 clicks, 16.41% CTR, and recommendation action mix (6 scale, 3 pause, 1 retest).
+
+![Executive summary](excel/screenshots/01_executive_summary.png)
+
+### 2. Campaign KPIs
+
+Portfolio impressions, clicks, and CTR from exported mart data.
+
+![Campaign KPIs](excel/screenshots/02_campaign_kpis.png)
+
+### 3. A/B test results
+
+Mens and Womens email treatments outperform control with statistically significant lift.
+
+![A/B test results](excel/screenshots/03_ab_test_results.png)
+
+### 4. Recommendations matrix
+
+Scale / pause / retest actions with segment evidence.
+
+![Recommendations](excel/screenshots/04_recommendations.png)
+
+### 5. Pivot recommendations
+
+Action-count pivot with chart for stakeholder summary views.
+
+![Pivot recommendations](excel/screenshots/05_pivot_recommendations.png)
+
+### 6. A/B calculator
+
+Editable scenario calculator for conversion-rate what-if analysis.
+
+![A/B calculator](excel/screenshots/06_ab_calculator.png)
 
 ---
 
@@ -373,7 +432,7 @@ Five findings from the locked analytics pipeline, illustrated in the dashboard s
 | Mart exports for Tableau / Excel | ✅ Complete |
 | Week 2 analytics + exports | ✅ Complete |
 | Tableau dashboard (screenshots) | ✅ Complete |
-| Excel stakeholder workbook | 🔲 Pending |
+| Excel stakeholder workbook (screenshots) | ✅ Complete |
 | Final README case study | ✅ Complete |
 
 ---
@@ -385,7 +444,7 @@ Five findings from the locked analytics pipeline, illustrated in the dashboard s
 - Python cleaning, profiling, and export scripts
 - SQL marts for campaign KPIs, A/B tests, and forecasts
 - Tableau dashboard screenshots (6 PNG pages in `tableau/screenshots/`)
-- Excel executive workbook with A/B calculator
+- Excel executive workbook screenshots (6 PNG pages in `excel/screenshots/`)
 - Recommendations and executive summary docs
 - pytest test suite
 

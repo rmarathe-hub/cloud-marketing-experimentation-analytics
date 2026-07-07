@@ -35,12 +35,14 @@ EXPECTED_CSV_FILES = (
 )
 
 EXPECTED_EXCEL_SHEETS = (
+    "Executive_Summary",
     "Campaign_KPIs",
     "CTR_Trends",
     "Segment_Performance",
     "AB_Test_Results",
     "Forecast_Results",
     "Recommendations",
+    "Pivot_Recommendations",
     "AB_Calculator",
 )
 

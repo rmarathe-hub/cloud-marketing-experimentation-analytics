@@ -224,6 +224,7 @@ def test_readme_does_not_claim_week2_marts_complete():
     assert "A/B test analysis | ✅ Complete" in readme
     assert "CTR forecasting | ✅ Complete" in readme
     assert "Tableau dashboard (screenshots) | ✅ Complete" in readme
+    assert "Excel stakeholder workbook (screenshots) | ✅ Complete" in readme
 
 
 def test_upload_script_does_not_contain_secrets():
