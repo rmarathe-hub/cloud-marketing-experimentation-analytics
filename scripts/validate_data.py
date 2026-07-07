@@ -120,7 +120,8 @@ def validate_avazu_ctr(
     actual_ctr = connection.execute(
         "SELECT AVG(CAST(click AS DOUBLE)) FROM stg_ad_events"
     ).fetchone()[0]
-    passed = abs(float(actual_ctr) - float(expected_ctr)) <= tolerance
+    actual_ctr = 0.0 if actual_ctr is None else float(actual_ctr)
+    passed = abs(actual_ctr - float(expected_ctr)) <= tolerance
     return ValidationResult(
         check_name="stg_ad_events_ctr",
         status="pass" if passed else "fail",
@@ -143,7 +144,8 @@ def validate_hillstrom_visit_rate(
     actual_rate = connection.execute(
         "SELECT AVG(CAST(visit AS DOUBLE)) FROM stg_email_experiment"
     ).fetchone()[0]
-    passed = abs(float(actual_rate) - float(expected_rate)) <= tolerance
+    actual_rate = 0.0 if actual_rate is None else float(actual_rate)
+    passed = abs(actual_rate - float(expected_rate)) <= tolerance
     return ValidationResult(
         check_name="stg_email_experiment_visit_rate",
         status="pass" if passed else "fail",

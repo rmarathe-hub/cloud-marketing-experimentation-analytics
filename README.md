@@ -186,6 +186,23 @@ Run the full Week 1 test suite:
 pytest -q -m "not network and not slow"
 ```
 
+Targeted marker runs:
+
+```bash
+pytest -q -m docs
+pytest -q -m hygiene
+pytest -q -m cleaning
+pytest -q -m profiling
+pytest -q -m smoke
+pytest -q -m duckdb
+pytest -q -m s3
+pytest -q -m security
+pytest -q -m week1
+```
+
+Real-data tests (`data`, `slow`) skip automatically when local files are absent.
+AWS integration tests (`aws`, `network`) are excluded by default.
+
 ---
 
 ## AWS S3 Upload

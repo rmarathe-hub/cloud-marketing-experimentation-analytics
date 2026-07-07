@@ -1,7 +1,7 @@
 # Week 1 Data Lock
 
 **Status:** Locked  
-**Generated:** 2026-07-07T04:39:55.385299+00:00  
+**Generated:** 2026-07-07T05:01:06.220716+00:00  
 **Scope:** Days 1–6 data foundation (no analytics marts)
 
 This document freezes the verified Week 1 dataset statistics and pipeline outputs. Do not change locked values in downstream docs without re-running the full Week 1 pipeline and regenerating this file.
@@ -78,12 +78,12 @@ python scripts/generate_week1_data_lock.py
 
 ## DuckDB load status
 
-Database: `/private/var/folders/kk/dhj42th93rb07fzh81xj2ylm0000gn/T/pytest-of-rohitmarathe/pytest-51/test_validation_summary_schema0/data/processed/marketing_analytics.duckdb`
+Database: `data/processed/marketing_analytics.duckdb`
 
-- `raw_avazu_ads`: 3 rows (success)
-- `raw_hillstrom_email`: 4 rows (success)
-- `stg_ad_events`: 2 rows (success)
-- `stg_email_experiment`: 4 rows (success)
+- `raw_avazu_ads`: 500,000 rows (success)
+- `raw_hillstrom_email`: 64,000 rows (success)
+- `stg_ad_events`: 500,000 rows (success)
+- `stg_email_experiment`: 64,000 rows (success)
 
 Mart tables remain empty until Week 2 analytics scripts run.
 

@@ -148,8 +148,9 @@ def test_load_data_is_safe_to_rerun(tmp_path):
         hillstrom_clean=bundle["hillstrom_parquet"],
     )
 
-    first = loader.load_data(config=config, targets=targets)
-    second = loader.load_data(config=config, targets=targets)
+    summary_path = tmp_path / "duckdb_load_summary.json"
+    first = loader.load_data(config=config, targets=targets, summary_path=summary_path)
+    second = loader.load_data(config=config, targets=targets, summary_path=summary_path)
 
     assert first["success"] and second["success"]
     assert first["loads"][0]["row_count"] == second["loads"][0]["row_count"]
@@ -167,6 +168,7 @@ def test_mart_tables_remain_empty_after_load(tmp_path):
             avazu_clean=bundle["avazu_parquet"],
             hillstrom_clean=bundle["hillstrom_parquet"],
         ),
+        summary_path=tmp_path / "duckdb_load_summary.json",
     )
 
     connection = duckdb.connect(str(bundle["db_path"]), read_only=True)
@@ -190,6 +192,7 @@ def test_validation_summary_schema(tmp_path):
             avazu_clean=bundle["avazu_parquet"],
             hillstrom_clean=bundle["hillstrom_parquet"],
         ),
+        summary_path=tmp_path / "duckdb_load_summary.json",
     )
 
     summary = validator.run_validation(
