@@ -271,10 +271,8 @@ EXCEL_WORKBOOK_SHEETS = (
 
 PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
     "Excel stakeholder workbook | ✅ Complete",
-    "Final README case study | ✅ Complete",
     "excel workbook complete",
     "excel polish complete",
-    "final readme case study complete",
     "resume bullets complete",
     "interview prep complete",
 ]
@@ -287,6 +285,31 @@ TABLEAU_SCREENSHOT_FILES = (
     "05_forecast.png",
     "06_recommendations.png",
 )
+
+TABLEAU_EXPORT_CSVS = (
+    "campaign_kpis.csv",
+    "ctr_trends.csv",
+    "segment_performance.csv",
+    "ab_test_results.csv",
+    "forecast_results.csv",
+    "recommendation_matrix.csv",
+)
+
+README_CASE_STUDY_COMPLETE_PHRASES = [
+    "Final README case study | ✅ Complete",
+]
+
+README_TWBX_FORBIDDEN_PHRASES = [
+    ".twbx is included",
+    ".twbx is required",
+    "twbx is committed",
+    "twbx is tracked",
+    "the .twbx is the submitted deliverable",
+    "packaged workbook is required",
+    "live tableau dashboard hosted online",
+    "forecast is production-grade",
+    "forecast is reliable for deployment",
+]
 
 PHASE3_FORBIDDEN_TRACKED_PATTERNS = (
     r"^tableau/.+\.twbx$",
@@ -371,11 +394,10 @@ TRACKED_FORBIDDEN_PATTERNS = [
 
 README_FORBIDDEN_COMPLETE_PHRASES = [
     "Excel stakeholder workbook | ✅ Complete",
-    "Final README case study | ✅ Complete",
 ]
 
 README_TABLEAU_COMPLETE_PHRASES = [
-    "Tableau dashboard | ✅ Complete",
+    "Tableau dashboard (screenshots) | ✅ Complete",
 ]
 
 README_WEEK1_COMPLETE_PHRASES = [

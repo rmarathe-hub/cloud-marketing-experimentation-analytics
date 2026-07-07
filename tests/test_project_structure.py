@@ -67,7 +67,7 @@ def test_readme_status_shows_week1_complete() -> None:
     assert "Funnel + segment analysis | ✅ Complete" in readme
     assert "A/B test analysis | ✅ Complete" in readme
     assert "CTR forecasting | ✅ Complete" in readme
-    assert "Tableau dashboard | ✅ Complete" in readme
+    assert "Tableau dashboard (screenshots) | ✅ Complete" in readme
 
 
 def test_readme_business_question_present() -> None:

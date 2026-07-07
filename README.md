@@ -289,19 +289,68 @@ pytest -q
 
 ## Tableau Dashboard
 
-After mart exports exist:
+Tableau dashboard screenshots built from DuckDB mart CSV exports (`data/exports/`). **The tracked portfolio artifact is the PNG screenshot set** in `tableau/screenshots/`. The Tableau packaged workbook (`.twbx`) is local/gitignored and not required to reproduce the code pipeline.
+
+Regenerate screenshots after export changes:
 
 ```bash
+python scripts/export_dashboard_data.py
 python scripts/build_tableau_dashboard.py
 ```
 
-This writes:
+Optional: rebuild a workbook manually in Tableau Desktop from the same CSV exports — see [docs/tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md). A local `.twbx` is not committed to the repository.
 
-- `tableau/screenshots/` — six dashboard page PNGs
-- `tableau/dashboard_spec.json` — page-to-data mapping
-- `data/processed/tableau_build_summary.json` — build metadata (gitignored)
+---
 
-For Tableau Desktop workbook steps, see [docs/tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md).
+## Dashboard Screenshots
+
+### 1. Executive overview
+
+500K impressions, 82,037 clicks, 16.41% CTR, and 10 recommendations (6 scale, 3 pause, 1 retest).
+
+![Executive overview](tableau/screenshots/01_executive_overview.png)
+
+### 2. CTR trends
+
+Hourly engagement snapshot from exported DuckDB mart data (single-day Avazu sample).
+
+![CTR trends](tableau/screenshots/02_ctr_trends.png)
+
+### 3. Segment performance
+
+Top segments with portfolio CTR reference line (16.41%); highest segment reaches 25.25% CTR.
+
+![Segment performance](tableau/screenshots/03_segment_performance.png)
+
+### 4. A/B test results
+
+Mens and Womens email treatments outperform control with statistically significant lift (+7.66 pp and +4.52 pp absolute).
+
+![A/B test results](tableau/screenshots/04_ab_test_results.png)
+
+### 5. Forecast
+
+Directional holdout forecast; MAPE is high (314.4%) because the Avazu sample is single-day/hourly — use for planning signals, not deployment-grade forecasting.
+
+![Forecast](tableau/screenshots/05_forecast.png)
+
+### 6. Recommendations
+
+Scale / pause / retest summary with top action items across mobile display and email channels.
+
+![Recommendations](tableau/screenshots/06_recommendations.png)
+
+---
+
+## Key Findings (Case Study)
+
+Five findings from the locked analytics pipeline, illustrated in the dashboard screenshots above:
+
+1. **Portfolio reach** — 500,000 mobile ad impressions generated 82,037 clicks at **16.41% CTR** on the Avazu single-day sample.
+2. **Segment concentration** — The top device/app/site segment delivered **25.25% CTR** on 68,033 impressions (~21% of clicks), a clear scale candidate.
+3. **Mens email lift** — Mens E-Mail drove **+7.66 percentage points** absolute visit lift over control (p ≈ 0, ~$16,403 incremental revenue).
+4. **Womens email lift** — Womens E-Mail drove **+4.52 percentage points** absolute lift (p ≈ 0, ~$9,077 incremental revenue).
+5. **Forecast caveat** — The moving-average holdout forecast shows **314.4% MAPE** on single-day hourly data; treat forecasts as directional and retest with more dates before budget decisions.
 
 ---
 
@@ -323,9 +372,9 @@ For Tableau Desktop workbook steps, see [docs/tableau_dashboard_guide.md](docs/t
 | Recommendations + executive summary | ✅ Complete |
 | Mart exports for Tableau / Excel | ✅ Complete |
 | Week 2 analytics + exports | ✅ Complete |
-| Tableau dashboard | ✅ Complete |
+| Tableau dashboard (screenshots) | ✅ Complete |
 | Excel stakeholder workbook | 🔲 Pending |
-| Final README case study | 🔲 Pending |
+| Final README case study | ✅ Complete |
 
 ---
 
@@ -335,7 +384,7 @@ For Tableau Desktop workbook steps, see [docs/tableau_dashboard_guide.md](docs/t
 - DuckDB analytical database with staging and mart tables
 - Python cleaning, profiling, and export scripts
 - SQL marts for campaign KPIs, A/B tests, and forecasts
-- Tableau dashboard (6 pages)
+- Tableau dashboard screenshots (6 PNG pages in `tableau/screenshots/`)
 - Excel executive workbook with A/B calculator
 - Recommendations and executive summary docs
 - pytest test suite

@@ -43,6 +43,8 @@ Thumbs.db
 *.swo
 
 # Tableau
+tableau/*.twb
+tableau/*.twbx
 *.twbx
 *.twb
 !tableau/screenshots/

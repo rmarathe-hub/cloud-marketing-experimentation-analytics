@@ -7,6 +7,7 @@ import pytest
 from helpers import (
     DOCS_DIR,
     PROJECT_ROOT,
+    README_CASE_STUDY_COMPLETE_PHRASES,
     README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK2_COMPLETE_PHRASES,
     WEEK2_SCRIPTS_PENDING,
@@ -23,7 +24,6 @@ README = read_text(PROJECT_ROOT / "README.md")
     "phrase",
     [
         "Excel stakeholder workbook | ✅ Complete",
-        "Final README case study | ✅ Complete",
     ],
 )
 def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
@@ -32,6 +32,11 @@ def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
 
 def test_readme_marks_tableau_dashboard_complete() -> None:
     for phrase in README_TABLEAU_COMPLETE_PHRASES:
+        assert phrase in README
+
+
+def test_readme_marks_final_case_study_complete() -> None:
+    for phrase in README_CASE_STUDY_COMPLETE_PHRASES:
         assert phrase in README
 
 

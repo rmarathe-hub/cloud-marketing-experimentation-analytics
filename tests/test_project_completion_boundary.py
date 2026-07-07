@@ -89,8 +89,8 @@ def test_readme_lists_excel_polish_pending() -> None:
     assert "Excel stakeholder workbook | 🔲 Pending" in README
 
 
-def test_readme_lists_final_case_study_pending() -> None:
-    assert "Final README case study | 🔲 Pending" in README
+def test_readme_lists_final_case_study_complete() -> None:
+    assert "Final README case study | ✅ Complete" in README
 
 
 def test_readme_links_week1_and_week2_lock_docs() -> None:
@@ -121,8 +121,7 @@ def test_phase3_deliverables_not_tracked(pattern: str) -> None:
 @pytest.mark.parametrize("filename", TABLEAU_SCREENSHOT_FILES)
 def test_tableau_screenshot_files_exist(filename: str) -> None:
     path = PROJECT_ROOT / "tableau" / "screenshots" / filename
-    if not path.is_file():
-        pytest.skip("Run: python scripts/build_tableau_dashboard.py")
+    assert path.is_file(), f"Missing required screenshot: {filename}"
     assert path.stat().st_size > 5_000
 
 
@@ -168,6 +167,7 @@ def test_week2_lock_doc_states_phase3_boundary() -> None:
     assert "phase 3 boundary" in lock
     assert "excel" in lock
     assert "not started" in lock
+    assert "screenshot" in lock
 
 
 def test_recommendations_doc_does_not_claim_excel_complete() -> None:

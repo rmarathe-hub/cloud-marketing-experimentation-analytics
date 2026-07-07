@@ -24,7 +24,7 @@ from paths import (
     TABLEAU_SCREENSHOTS_DIR,
 )
 
-pytestmark = [pytest.mark.unit, pytest.mark.exports]
+pytestmark = [pytest.mark.unit, pytest.mark.exports, pytest.mark.tableau]
 
 EXPECTED_PAGES = (
     ("01_executive_overview.png", "Executive Overview"),
@@ -135,13 +135,10 @@ def test_builder_fails_without_exports(tmp_path) -> None:
 
 
 def test_production_tableau_screenshots_exist() -> None:
-    missing = [name for name in TABLEAU_SCREENSHOT_FILES if not (TABLEAU_SCREENSHOTS_DIR / name).is_file()]
-    if missing:
-        pytest.skip(
-            "Production screenshots not generated yet. Run: python scripts/build_tableau_dashboard.py"
-        )
     for name in TABLEAU_SCREENSHOT_FILES:
-        assert (TABLEAU_SCREENSHOTS_DIR / name).stat().st_size > 5_000
+        path = TABLEAU_SCREENSHOTS_DIR / name
+        assert path.is_file(), f"Missing required screenshot: {name}"
+        assert path.stat().st_size > 5_000
 
 
 def test_production_dashboard_spec_exists() -> None:

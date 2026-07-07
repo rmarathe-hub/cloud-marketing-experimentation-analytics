@@ -74,9 +74,15 @@ def test_readme_does_not_claim_future_deliverables(forbidden_phrase: str) -> Non
     assert forbidden_phrase.lower() not in readme
 
 
-def test_no_tableau_workbook_in_repo() -> None:
-    assert list(PROJECT_ROOT.glob("**/*.twbx")) == []
-    assert list((PROJECT_ROOT / "tableau").glob("*.twb")) == []
+def test_no_tableau_workbook_tracked_in_git() -> None:
+    from helpers import git_tracked_files
+
+    tracked_workbooks = [
+        path
+        for path in git_tracked_files()
+        if path.endswith((".twbx", ".twb"))
+    ]
+    assert tracked_workbooks == []
 
 
 def test_no_excel_workbook_tracked_in_git() -> None:

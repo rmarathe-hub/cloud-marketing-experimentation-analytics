@@ -138,8 +138,10 @@ Checks passed: **25 / 25**
 
 Week 2 analytics and exports end here. Phase 3 status:
 
-- Tableau dashboard (6 pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
+- Tableau dashboard screenshots (6 PNG pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
+- Final README case study — **complete** (Key Findings section in README)
 - Excel stakeholder workbook polish (pivot tables, screenshots) — **not started**
-- Final README case study — **not started**
+
+The Tableau `.twbx` workbook is local/gitignored and optional; PNG screenshots are the tracked portfolio artifact.
 
 Proceed with remaining Phase 3 items after this lock document matches your local validation output.

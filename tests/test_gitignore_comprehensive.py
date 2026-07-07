@@ -17,6 +17,8 @@ EXTRA_GITIGNORE_FRAGMENTS = [
     "excel/*.xlsm",
     "*.twbx",
     "*.twb",
+    "tableau/*.twbx",
+    "tableau/*.twb",
     ".pytest_cache/",
 ]
 
