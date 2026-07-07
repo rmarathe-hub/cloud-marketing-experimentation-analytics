@@ -1,19 +1,31 @@
 # Data Dictionary
 
-Column-level reference for source datasets and analytical marts. Updated as data is profiled and loaded.
+Column-level reference for source datasets and analytical marts. Updated after Day 2 profiling.
 
 ---
 
 ## Source: Avazu Mobile Ad Click Data
 
 **File:** `data/raw/avazu_train.csv`  
-**Status:** Pending acquisition
+**Status:** Acquired (500,000-row real subsample from Kaggle competition data)  
+**Profiled:** 2026-07-07
+
+| Stat | Value |
+|------|-------|
+| Rows | 500,000 |
+| Date range | 2014-10-21 (1 day in subsample) |
+| CTR | 16.41% |
+| Clicks | 82,037 |
+| Impressions | 500,000 |
+| Missing values | None detected |
+
+> Note: The Avazu competition dataset uses click/non-click subsampling, so CTR is not representative of live display advertising rates.
 
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | integer | Unique impression identifier |
 | `click` | integer (0/1) | Whether the ad was clicked |
-| `hour` | string | Timestamp encoded as YYYYMMDDHH |
+| `hour` | string | Timestamp encoded as YYMMDDHH |
 | `C1` | categorical | Anonymous feature |
 | `banner_pos` | integer | Banner position |
 | `site_id` | categorical | Publisher site identifier |
@@ -27,16 +39,21 @@ Column-level reference for source datasets and analytical marts. Updated as data
 | `device_model` | categorical | Device model |
 | `device_type` | integer | Device type code |
 | `device_conn_type` | integer | Connection type code |
-| `C14` | numeric | Anonymous feature |
-| `C15` | numeric | Anonymous feature |
-| `C16` | numeric | Anonymous feature |
-| `C17` | numeric | Anonymous feature |
-| `C18` | numeric | Anonymous feature |
-| `C19` | numeric | Anonymous feature |
-| `C20` | numeric | Anonymous feature |
-| `C21` | numeric | Anonymous feature |
+| `C14`–`C21` | numeric | Anonymous features |
 
-### Derived Fields (after cleaning)
+### Unique entity counts (profiled)
+
+| Entity | Unique values |
+|--------|---------------|
+| `device_id` | 41,413 |
+| `device_type` | 4 |
+| `app_id` | 1,641 |
+| `app_category` | 20 |
+| `site_id` | 1,704 |
+| `site_category` | 21 |
+| `banner_pos` | 6 |
+
+### Derived fields (after cleaning)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -48,7 +65,15 @@ Column-level reference for source datasets and analytical marts. Updated as data
 ## Source: Hillstrom Email Marketing Data
 
 **File:** `data/raw/hillstrom_email.csv`  
-**Status:** Pending acquisition
+**Status:** Acquired (full 64,000-row dataset from MineThatData)  
+**Profiled:** 2026-07-07
+
+| Stat | Value |
+|------|-------|
+| Rows | 64,000 |
+| Visit rate | 14.68% |
+| Conversion rate | 0.90% |
+| Missing values | None detected |
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -57,14 +82,23 @@ Column-level reference for source datasets and analytical marts. Updated as data
 | `history` | numeric | Historical purchase amount |
 | `mens` | integer (0/1) | Purchased men's merchandise |
 | `womens` | integer (0/1) | Purchased women's merchandise |
-| `zip_code` | categorical | Customer zip code type (Urban, Suburban, Rural) |
+| `zip_code` | categorical | Urban / Suburban / Rural |
 | `newbie` | integer (0/1) | New customer flag |
-| `channel` | categorical | Marketing channel |
-| `segment` | categorical | Experiment group (Control, Mens E-Mail, Womens E-Mail) |
-| `visit` | integer (0/1) | Whether customer visited within 2 weeks |
+| `channel` | categorical | Web / Phone / Multichannel |
+| `segment` | categorical | No E-Mail / Mens E-Mail / Womens E-Mail |
+| `visit` | integer (0/1) | Visited within 2 weeks |
+| `conversion` | integer (0/1) | Purchased within 2 weeks |
 | `spend` | numeric | Amount spent within 2 weeks |
 
-### Standardized Fields (after cleaning)
+### Treatment group counts (profiled)
+
+| Segment | Recipients |
+|---------|------------|
+| Womens E-Mail | 21,387 |
+| Mens E-Mail | 21,307 |
+| No E-Mail (control) | 21,306 |
+
+### Standardized fields (after cleaning)
 
 | Column | Type | Description |
 |--------|------|-------------|
@@ -77,7 +111,7 @@ Column-level reference for source datasets and analytical marts. Updated as data
 ## DuckDB Tables
 
 **Database:** `data/processed/marketing_analytics.duckdb`  
-**Status:** Pending setup
+**Status:** Pending setup (Day 5)
 
 | Table | Layer | Description |
 |-------|-------|-------------|
@@ -94,9 +128,9 @@ Column-level reference for source datasets and analytical marts. Updated as data
 
 ---
 
-## Export Files (for Tableau / Excel)
+## Export files (for Tableau / Excel)
 
-| File | Source Mart | Description |
+| File | Source mart | Description |
 |------|-------------|-------------|
 | `data/marts/campaign_kpis.csv` | `mart_campaign_kpis` | Campaign performance summary |
 | `data/marts/ctr_trends.csv` | `mart_ctr_trends` | CTR over time |
@@ -105,4 +139,13 @@ Column-level reference for source datasets and analytical marts. Updated as data
 | `data/marts/forecast_results.csv` | `mart_forecast_results` | Forecast accuracy |
 | `data/marts/recommendation_matrix.csv` | Derived | Scale / pause / retest actions |
 
-> This dictionary will be updated after Day 2 profiling with actual row counts, date ranges, and data quality findings.
+---
+
+## Dataset sources
+
+| Dataset | Source | Acquisition |
+|---------|--------|-------------|
+| Hillstrom | [MineThatData](http://www.minethatdata.com/Kevin_Hillstrom_MineThatData_E-MailAnalytics_DataMiningChallenge_2008.03.20.csv) | Auto-download via `scripts/download_or_import_data.py` |
+| Avazu | [Kaggle Avazu CTR Prediction](https://www.kaggle.com/competitions/avazu-ctr-prediction) | 500k-row subsample streamed from public mirror; optional full `train.gz` via Kaggle API |
+
+See `data/processed/raw_profile_summary.json` for full profiling output.

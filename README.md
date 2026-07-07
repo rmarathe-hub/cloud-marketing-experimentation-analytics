@@ -175,7 +175,7 @@ pytest -q
 | Phase | Status |
 |-------|--------|
 | Repo scaffold + business framing | ✅ Complete |
-| Dataset acquisition + profiling | 🔲 Pending |
+| Dataset acquisition + profiling | ✅ Complete |
 | Cleaning pipeline | 🔲 Pending |
 | AWS S3 setup + upload | 🔲 Pending |
 | DuckDB warehouse + validation | 🔲 Pending |
