@@ -15,7 +15,6 @@ README = read_text(PROJECT_ROOT / "README.md")
 @pytest.mark.parametrize(
     "phrase",
     [
-        "DuckDB load + validation | ✅ Complete",
         "Campaign KPI marts | ✅ Complete",
         "A/B test analysis | ✅ Complete",
         "CTR forecasting | ✅ Complete",
@@ -36,6 +35,10 @@ def test_readme_marks_duckdb_warehouse_setup_complete() -> None:
     assert "DuckDB warehouse setup | ✅ Complete" in README
 
 
+def test_readme_marks_duckdb_load_validation_complete() -> None:
+    assert "DuckDB load + validation | ✅ Complete" in README
+
+
 def test_schema_sql_files_exist_without_analytics_build_sql() -> None:
     sql_files = sorted((PROJECT_ROOT / "sql").glob("*.sql"))
     names = [path.name for path in sql_files]
@@ -50,10 +53,11 @@ def test_upload_script_exists() -> None:
     assert (PROJECT_ROOT / "scripts" / "upload_to_s3.py").exists()
 
 
-def test_create_duckdb_script_exists_load_not_yet() -> None:
+def test_duckdb_pipeline_scripts_exist_without_week2_analytics() -> None:
     assert (PROJECT_ROOT / "scripts" / "create_duckdb_database.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "load_to_duckdb.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "validate_data.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "load_to_duckdb.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "validate_data.py").exists()
+    assert not (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
 
 
 def test_project_plan_mentions_day4_as_next_cloud_step() -> None:

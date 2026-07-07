@@ -68,6 +68,8 @@ REQUIRED_SCRIPTS = [
     "clean_hillstrom_email.py",
     "upload_to_s3.py",
     "create_duckdb_database.py",
+    "load_to_duckdb.py",
+    "validate_data.py",
 ]
 
 REQUIRED_PACKAGES = [

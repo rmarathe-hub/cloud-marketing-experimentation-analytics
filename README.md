@@ -142,7 +142,30 @@ Optional verification:
 python -c "import duckdb; con=duckdb.connect('data/processed/marketing_analytics.duckdb', read_only=True); print(con.execute('SHOW TABLES').fetchdf()); con.close()"
 ```
 
-See [docs/duckdb_setup.md](docs/duckdb_setup.md) for schema layers and next steps. Data load begins in Day 6.
+See [docs/duckdb_setup.md](docs/duckdb_setup.md) for schema layers and next steps.
+
+---
+
+## DuckDB Load + Validation
+
+After the warehouse schema exists and local raw/processed files are available:
+
+```bash
+python scripts/load_to_duckdb.py
+python scripts/validate_data.py
+```
+
+This loads:
+
+- `data/raw/*.csv` → `raw_avazu_ads`, `raw_hillstrom_email`
+- `data/processed/*.parquet` → `stg_ad_events`, `stg_email_experiment`
+
+Mart tables remain empty until Week 2 analytics scripts run.
+
+Summaries written locally (gitignored):
+
+- `data/processed/duckdb_load_summary.json`
+- `data/processed/data_validation_summary.json`
 
 ---
 
@@ -217,7 +240,7 @@ pytest -q
 | Cleaning pipeline | ✅ Complete |
 | AWS S3 setup + upload | ✅ Complete |
 | DuckDB warehouse setup | ✅ Complete |
-| DuckDB load + validation | 🔲 Pending |
+| DuckDB load + validation | ✅ Complete |
 | Campaign KPI marts | 🔲 Pending |
 | A/B test analysis | 🔲 Pending |
 | CTR forecasting | 🔲 Pending |

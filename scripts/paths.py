@@ -20,6 +20,8 @@ CLEANING_SUMMARY = PROCESSED_DIR / "cleaning_summary.json"
 S3_UPLOAD_SUMMARY = PROCESSED_DIR / "s3_upload_summary.json"
 DUCKDB_DEFAULT_PATH = PROCESSED_DIR / "marketing_analytics.duckdb"
 DUCKDB_SETUP_SUMMARY = PROCESSED_DIR / "duckdb_setup_summary.json"
+DUCKDB_LOAD_SUMMARY = PROCESSED_DIR / "duckdb_load_summary.json"
+DATA_VALIDATION_SUMMARY = PROCESSED_DIR / "data_validation_summary.json"
 
 SQL_DIR = PROJECT_ROOT / "sql"
 

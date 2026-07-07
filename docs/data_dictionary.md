@@ -111,7 +111,7 @@ Column-level reference for source datasets and analytical marts. Updated after D
 ## DuckDB Tables
 
 **Database:** `data/processed/marketing_analytics.duckdb`  
-**Status:** Schema created (Day 5). Data load pending (Day 6).
+**Status:** Schema created (Day 5). Data loaded and validated (Day 6).
 
 | Table | Layer | Description |
 |-------|-------|-------------|

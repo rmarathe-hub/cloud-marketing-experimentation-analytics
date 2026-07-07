@@ -50,19 +50,20 @@ def test_readme_mentions_core_stack(keyword: str) -> None:
     assert keyword in read_text(PROJECT_ROOT / "README.md")
 
 
-def test_readme_status_shows_days_1_to_5_complete() -> None:
+def test_readme_status_shows_days_1_to_6_complete() -> None:
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "Repo scaffold + business framing | ✅ Complete" in readme
     assert "Dataset acquisition + profiling | ✅ Complete" in readme
     assert "Cleaning pipeline | ✅ Complete" in readme
     assert "AWS S3 setup + upload | ✅ Complete" in readme
     assert "DuckDB warehouse setup | ✅ Complete" in readme
+    assert "DuckDB load + validation | ✅ Complete" in readme
 
 
-def test_readme_does_not_claim_day6_complete() -> None:
+def test_readme_does_not_claim_week2_marts_complete() -> None:
     readme = read_text(PROJECT_ROOT / "README.md")
-    assert "DuckDB load + validation | 🔲 Pending" in readme
-    assert "DuckDB load + validation | ✅ Complete" not in readme
+    assert "Campaign KPI marts | 🔲 Pending" in readme
+    assert "Campaign KPI marts | ✅ Complete" not in readme
 
 
 def test_readme_business_question_present() -> None:

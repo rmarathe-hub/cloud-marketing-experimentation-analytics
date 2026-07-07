@@ -116,8 +116,8 @@ def test_duckdb_setup_doc_exists_with_day6_warning():
     content = read_text(DOCS_DIR / "duckdb_setup.md").lower()
     for term in [
         "duckdb",
-        "day 6",
-        "create table",
+        "load_to_duckdb",
+        "validate_data",
         "raw_avazu_ads",
         "stg_ad_events",
         "mart_campaign_kpis",
@@ -130,12 +130,7 @@ def test_duckdb_setup_doc_exists_with_day6_warning():
         assert term in content
 
 
-def test_readme_marks_duckdb_warehouse_complete_not_load():
+def test_readme_marks_duckdb_warehouse_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "DuckDB warehouse setup | ✅ Complete" in readme
-    assert "DuckDB load + validation | 🔲 Pending" in readme
-    assert "DuckDB load + validation | ✅ Complete" not in readme
-
-
-def test_load_to_duckdb_script_not_created_yet():
-    assert not (PROJECT_ROOT / "scripts" / "load_to_duckdb.py").exists()
+    assert "DuckDB load + validation | ✅ Complete" in readme

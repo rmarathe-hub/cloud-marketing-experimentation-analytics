@@ -216,10 +216,10 @@ def test_aws_s3_setup_doc_exists_with_security_warnings():
         assert term in content
 
 
-def test_readme_does_not_claim_day6_complete():
+def test_readme_does_not_claim_week2_marts_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
-    assert "DuckDB warehouse setup | ✅ Complete" in readme
-    assert "DuckDB load + validation | 🔲 Pending" in readme
+    assert "DuckDB load + validation | ✅ Complete" in readme
+    assert "Campaign KPI marts | 🔲 Pending" in readme
 
 
 def test_upload_script_does_not_contain_secrets():

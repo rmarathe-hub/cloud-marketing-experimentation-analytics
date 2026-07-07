@@ -90,7 +90,39 @@ con.close()
 "
 ```
 
-All tables should exist with **0 rows** after Day 5.
+After Day 5, all tables should exist with **0 rows**.
+
+---
+
+## Day 6: Load data + validation
+
+Load local files into raw and staging tables:
+
+```bash
+python scripts/load_to_duckdb.py
+python scripts/validate_data.py
+```
+
+| Source | Target table |
+|--------|----------------|
+| `data/raw/avazu_train.csv` | `raw_avazu_ads` |
+| `data/raw/hillstrom_email.csv` | `raw_hillstrom_email` |
+| `data/processed/avazu_clean.parquet` | `stg_ad_events` |
+| `data/processed/hillstrom_clean.parquet` | `stg_email_experiment` |
+
+Both scripts are **safe to rerun** — load clears raw/staging tables before reloading.
+
+Validation checks:
+
+- Row counts vs `raw_profile_summary.json` and `cleaning_summary.json`
+- Avazu CTR and Hillstrom visit rate vs cleaning summaries
+- Hillstrom treatment group counts
+- Mart tables remain empty (analytics marts are Week 2)
+
+Outputs (gitignored):
+
+- `data/processed/duckdb_load_summary.json`
+- `data/processed/data_validation_summary.json`
 
 ---
 
@@ -105,4 +137,4 @@ All tables should exist with **0 rows** after Day 5.
 
 ## Next step
 
-After the schema exists, proceed to **Day 6: Load data + validation** (`load_to_duckdb.py`, `validate_data.py`).
+After load and validation pass, proceed to **Day 7: Week 1 tests + docs lock**, then Week 2 analytics marts.

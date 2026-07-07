@@ -122,7 +122,8 @@ pytestmark = pytest.mark.docs
             "duckdb_setup.md",
             [
                 "duckdb",
-                "day 6",
+                "load_to_duckdb",
+                "validate_data",
                 "raw_avazu_ads",
                 "stg_ad_events",
                 "mart_campaign_kpis",
