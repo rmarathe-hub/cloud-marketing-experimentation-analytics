@@ -14,6 +14,10 @@ AVAZU_RAW_CSV = RAW_DIR / "avazu_train.csv"
 HILLSTROM_RAW_CSV = RAW_DIR / "hillstrom_email.csv"
 RAW_PROFILE_SUMMARY = PROCESSED_DIR / "raw_profile_summary.json"
 
+AVAZU_CLEAN_PARQUET = PROCESSED_DIR / "avazu_clean.parquet"
+HILLSTROM_CLEAN_PARQUET = PROCESSED_DIR / "hillstrom_clean.parquet"
+CLEANING_SUMMARY = PROCESSED_DIR / "cleaning_summary.json"
+
 AVAZU_COLUMNS = [
     "id",
     "click",

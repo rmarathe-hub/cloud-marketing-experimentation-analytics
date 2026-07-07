@@ -176,7 +176,7 @@ pytest -q
 |-------|--------|
 | Repo scaffold + business framing | ✅ Complete |
 | Dataset acquisition + profiling | ✅ Complete |
-| Cleaning pipeline | 🔲 Pending |
+| Cleaning pipeline | ✅ Complete |
 | AWS S3 setup + upload | 🔲 Pending |
 | DuckDB warehouse + validation | 🔲 Pending |
 | Campaign KPI marts | 🔲 Pending |
