@@ -23,7 +23,7 @@ from helpers import (
 )
 from paths import SQL_DIR
 
-pytestmark = [pytest.mark.unit, pytest.mark.duckdb]
+pytestmark = [pytest.mark.unit, pytest.mark.duckdb, pytest.mark.forecast]
 
 
 def _build_tiny_avazu_bundle(tmp_path):

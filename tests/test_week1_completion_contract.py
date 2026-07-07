@@ -64,7 +64,6 @@ def test_readme_does_not_mark_week2_complete(phrase: str) -> None:
 @pytest.mark.parametrize(
     "forbidden_phrase",
     [
-        "Week 2 analytics | ✅ Complete",
         "mart tables populated",
         "Tableau dashboard complete",
         "Excel workbook complete",
@@ -80,9 +79,15 @@ def test_no_tableau_workbook_in_repo() -> None:
     assert list((PROJECT_ROOT / "tableau").glob("*.twb")) == []
 
 
-def test_no_excel_workbook_in_repo() -> None:
-    assert list((PROJECT_ROOT / "excel").glob("*.xlsx")) == []
-    assert list((PROJECT_ROOT / "excel").glob("*.xlsm")) == []
+def test_no_excel_workbook_tracked_in_git() -> None:
+    from helpers import git_tracked_files
+
+    tracked_excel = [
+        path
+        for path in git_tracked_files()
+        if path.startswith("excel/") and path.endswith((".xlsx", ".xlsm"))
+    ]
+    assert tracked_excel == []
 
 
 def test_sql_directory_has_only_schema_files() -> None:

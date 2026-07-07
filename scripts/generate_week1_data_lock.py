@@ -203,7 +203,7 @@ Database: `{_safe_database_path(load)}`
 
 {chr(10).join(load_lines)}
 
-Mart tables remain empty until Week 2 analytics scripts run.
+All six mart tables are populated in Week 2. See [week2_analytics_lock.md](week2_analytics_lock.md).
 
 ---
 
@@ -227,19 +227,19 @@ Checks passed: **{validation.get('passed_count', 0)} / {validation.get('passed_c
 1. Do not edit locked statistics manually in analytics docs.
 2. Re-run the full Week 1 pipeline if source data or cleaning logic changes.
 3. Regenerate this document with `generate_week1_data_lock.py`.
-4. Re-run `pytest -q -m "not network and not slow"` before starting Week 2.
+4. Re-run `pytest -q -m "not network and not slow"` after any Week 1 change.
 
 ---
 
 ## Week 2 boundary
 
-Week 1 ends here. The following are **not started**:
+Week 1 data foundation ends here. Week 2 marketing analytics are documented in [week2_analytics_lock.md](week2_analytics_lock.md).
 
-- Campaign KPI marts
-- A/B test analysis scripts
-- CTR forecasting
-- Tableau dashboard
-- Excel workbook
+Phase 3 deliverables are **not started**:
+
+- Tableau dashboard (6 pages)
+- Excel stakeholder workbook polish
+- Final README case study
 
 Proceed to Week 2 only after this lock document matches your local validation output.
 """

@@ -71,7 +71,7 @@ def test_week1_data_lock_doc_exists():
         "mens_email",
         "womens_email",
         "Week 2 boundary",
-        "Campaign KPI marts",
+        "week2_analytics_lock.md",
         "generate_week1_data_lock.py",
     ],
 )
@@ -93,8 +93,9 @@ def test_week2_pending_scripts_do_not_exist():
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 
 
-def test_week2_day11_ctr_forecast_script_exists():
-    assert (PROJECT_ROOT / "scripts" / "run_ctr_forecast.py").exists()
+def test_week2_day13_export_script_exists():
+    assert (PROJECT_ROOT / "scripts" / "export_dashboard_data.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "generate_week2_analytics_lock.py").exists()
 
 
 def test_readme_marks_week1_lock_complete():

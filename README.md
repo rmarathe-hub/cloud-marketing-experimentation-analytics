@@ -126,6 +126,7 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [aws_s3_setup.md](docs/aws_s3_setup.md) | S3 bucket, IAM, and upload setup |
 | [duckdb_setup.md](docs/duckdb_setup.md) | Local DuckDB schema and warehouse setup |
 | [week1_data_lock.md](docs/week1_data_lock.md) | Locked Week 1 dataset stats and pipeline contract |
+| [week2_analytics_lock.md](docs/week2_analytics_lock.md) | Locked Week 2 mart stats, exports, and validation |
 
 ---
 
@@ -161,12 +162,24 @@ This loads:
 - `data/raw/*.csv` → `raw_avazu_ads`, `raw_hillstrom_email`
 - `data/processed/*.parquet` → `stg_ad_events`, `stg_email_experiment`
 
-Mart tables remain empty until Week 2 analytics scripts run.
+Mart tables are populated by the Week 2 analytics scripts (see [week2_analytics_lock.md](docs/week2_analytics_lock.md)).
 
 Summaries written locally (gitignored):
 
 - `data/processed/duckdb_load_summary.json`
 - `data/processed/data_validation_summary.json`
+
+---
+
+## Week 2 Analytics Lock
+
+After the full Week 2 pipeline and validation pass locally:
+
+```bash
+python scripts/generate_week2_analytics_lock.py
+```
+
+This writes [docs/week2_analytics_lock.md](docs/week2_analytics_lock.md) with frozen mart statistics, A/B outcomes, forecast metrics, export inventory, and validation checkpoints.
 
 ---
 
@@ -198,6 +211,7 @@ pytest -q -m duckdb
 pytest -q -m s3
 pytest -q -m security
 pytest -q -m week1
+pytest -q -m week2
 ```
 
 Real-data tests (`data`, `slow`) skip automatically when local files are absent.
@@ -253,15 +267,15 @@ python scripts/upload_to_s3.py
 python scripts/create_duckdb_database.py
 python scripts/load_to_duckdb.py
 python scripts/validate_data.py
+# Week 2 — analytics + exports
 python scripts/run_campaign_kpis.py
 python scripts/run_funnel_segment_analysis.py
 python scripts/run_ab_test_analysis.py
 python scripts/run_ctr_forecast.py
 python scripts/generate_recommendations.py
-python scripts/validate_data.py
-
-# Week 2 — exports
 python scripts/export_dashboard_data.py
+python scripts/validate_data.py
+python scripts/generate_week2_analytics_lock.py
 
 # Tests
 pytest -q
@@ -285,6 +299,8 @@ pytest -q
 | A/B test analysis | ✅ Complete |
 | CTR forecasting | ✅ Complete |
 | Recommendations + executive summary | ✅ Complete |
+| Mart exports for Tableau / Excel | ✅ Complete |
+| Week 2 analytics + exports | ✅ Complete |
 | Tableau dashboard | 🔲 Pending |
 | Excel stakeholder workbook | 🔲 Pending |
 | Final README case study | 🔲 Pending |

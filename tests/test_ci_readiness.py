@@ -37,7 +37,24 @@ def test_default_pytest_collection_succeeds():
 
 @pytest.mark.parametrize(
     "marker",
-    ["unit", "docs", "hygiene", "cleaning", "profiling", "smoke", "duckdb", "s3", "security", "week1"],
+    [
+        "unit",
+        "docs",
+        "hygiene",
+        "cleaning",
+        "profiling",
+        "smoke",
+        "duckdb",
+        "s3",
+        "security",
+        "week1",
+        "week2",
+        "exports",
+        "excel",
+        "recommendations",
+        "forecast",
+        "abtest",
+    ],
 )
 def test_marker_registered(marker: str):
     ini = read_text(PROJECT_ROOT / "pytest.ini")

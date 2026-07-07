@@ -25,7 +25,7 @@ from helpers import (
 )
 from paths import SQL_DIR
 
-pytestmark = [pytest.mark.docs, pytest.mark.unit]
+pytestmark = [pytest.mark.docs, pytest.mark.unit, pytest.mark.recommendations]
 
 
 def _build_full_tiny_bundle(tmp_path):

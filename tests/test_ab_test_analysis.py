@@ -26,7 +26,7 @@ from helpers import (
 )
 from paths import SQL_DIR
 
-pytestmark = [pytest.mark.unit, pytest.mark.duckdb]
+pytestmark = [pytest.mark.unit, pytest.mark.duckdb, pytest.mark.abtest]
 
 
 def _build_tiny_hillstrom_bundle(tmp_path):
@@ -286,17 +286,12 @@ def test_real_ab_test_mart_matches_lock():
             FROM mart_ab_test_results
             """
         ).fetchone()[0]
+        weighted_rate = float(control_rate)
     finally:
         connection.close()
 
     assert counts == HILLSTROM_CLEAN_GROUPS
-    weighted_rate = connection.execute(
-        """
-        SELECT SUM(conversions)::DOUBLE / SUM(recipients)::DOUBLE
-        FROM mart_ab_test_results
-        """
-    ).fetchone()[0]
-    assert_approx_ratio(float(weighted_rate), WEEK1_LOCKED["hillstrom_visit_rate_ratio"])
+    assert_approx_ratio(weighted_rate, WEEK1_LOCKED["hillstrom_visit_rate_ratio"])
 
 
 def test_ab_test_methodology_doc_exists():

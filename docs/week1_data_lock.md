@@ -1,7 +1,7 @@
 # Week 1 Data Lock
 
 **Status:** Locked  
-**Generated:** 2026-07-07T18:03:15.333596+00:00  
+**Generated:** 2026-07-07T18:55:37.045596+00:00  
 **Scope:** Days 1–6 data foundation (no analytics marts)
 
 This document freezes the verified Week 1 dataset statistics and pipeline outputs. Do not change locked values in downstream docs without re-running the full Week 1 pipeline and regenerating this file.
@@ -85,14 +85,14 @@ Database: `data/processed/marketing_analytics.duckdb`
 - `stg_ad_events`: 500,000 rows (success)
 - `stg_email_experiment`: 64,000 rows (success)
 
-Mart tables remain empty until Week 2 analytics scripts run.
+All six mart tables are populated in Week 2. See [week2_analytics_lock.md](week2_analytics_lock.md).
 
 ---
 
 ## Validation status
 
 Validation success: **True**  
-Checks passed: **13 / 13**
+Checks passed: **25 / 25**
 
 - raw_avazu_ads_row_count: pass
 - raw_hillstrom_email_row_count: pass
@@ -101,12 +101,24 @@ Checks passed: **13 / 13**
 - stg_ad_events_ctr: pass
 - stg_email_experiment_visit_rate: pass
 - stg_email_experiment_treatment_groups: pass
-- mart_campaign_kpis_empty: pass
-- mart_ctr_trends_empty: pass
-- mart_device_app_performance_empty: pass
-- mart_ab_test_results_empty: pass
-- mart_forecast_inputs_empty: pass
-- mart_forecast_results_empty: pass
+- mart_campaign_kpis_populated: pass
+- mart_campaign_kpis_ctr: pass
+- mart_ctr_trends_populated: pass
+- mart_ctr_trends_impressions: pass
+- mart_ctr_trends_ctr: pass
+- mart_device_app_performance_populated: pass
+- mart_device_app_performance_impressions: pass
+- mart_device_app_performance_click_share: pass
+- mart_ab_test_results_populated: pass
+- mart_ab_test_results_group_counts: pass
+- mart_ab_test_results_recipients: pass
+- mart_ab_test_results_overall_conversion_rate: pass
+- mart_ab_test_results_treatment_significance: pass
+- mart_forecast_inputs_populated: pass
+- mart_forecast_inputs_impressions: pass
+- mart_forecast_inputs_ctr: pass
+- mart_forecast_results_populated: pass
+- mart_forecast_results_metrics: pass
 
 ---
 
@@ -126,18 +138,18 @@ Checks passed: **13 / 13**
 1. Do not edit locked statistics manually in analytics docs.
 2. Re-run the full Week 1 pipeline if source data or cleaning logic changes.
 3. Regenerate this document with `generate_week1_data_lock.py`.
-4. Re-run `pytest -q -m "not network and not slow"` before starting Week 2.
+4. Re-run `pytest -q -m "not network and not slow"` after any Week 1 change.
 
 ---
 
 ## Week 2 boundary
 
-Week 1 ends here. The following are **not started**:
+Week 1 data foundation ends here. Week 2 marketing analytics are documented in [week2_analytics_lock.md](week2_analytics_lock.md).
 
-- Campaign KPI marts
-- A/B test analysis scripts
-- CTR forecasting
-- Tableau dashboard
-- Excel workbook
+Phase 3 deliverables are **not started**:
+
+- Tableau dashboard (6 pages)
+- Excel stakeholder workbook polish
+- Final README case study
 
 Proceed to Week 2 only after this lock document matches your local validation output.

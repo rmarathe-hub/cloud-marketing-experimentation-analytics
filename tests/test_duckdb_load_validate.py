@@ -226,7 +226,8 @@ def test_validate_script_exists_load_script_exists():
     assert (PROJECT_ROOT / "scripts" / "run_funnel_segment_analysis.py").exists()
     assert (PROJECT_ROOT / "scripts" / "run_ab_test_analysis.py").exists()
     assert (PROJECT_ROOT / "scripts" / "run_ctr_forecast.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "export_dashboard_data.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "generate_recommendations.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "export_dashboard_data.py").exists()
 
 
 def test_duckdb_setup_doc_mentions_day6_load():

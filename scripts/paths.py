@@ -30,6 +30,16 @@ RECOMMENDATIONS_SUMMARY = PROCESSED_DIR / "recommendations_summary.json"
 RECOMMENDATIONS_DOC = DOCS_DIR / "recommendations.md"
 EXECUTIVE_SUMMARY_DOC = DOCS_DIR / "executive_summary.md"
 WEEK1_DATA_LOCK_DOC = DOCS_DIR / "week1_data_lock.md"
+WEEK2_ANALYTICS_LOCK_DOC = DOCS_DIR / "week2_analytics_lock.md"
+EXPORT_DASHBOARD_SUMMARY = PROCESSED_DIR / "export_dashboard_summary.json"
+EXCEL_WORKBOOK = PROJECT_ROOT / "excel" / "marketing_executive_workbook.xlsx"
+
+MART_CAMPAIGN_KPIS_CSV = MARTS_DIR / "campaign_kpis.csv"
+MART_CTR_TRENDS_CSV = MARTS_DIR / "ctr_trends.csv"
+MART_SEGMENT_PERFORMANCE_CSV = MARTS_DIR / "segment_performance.csv"
+MART_AB_TEST_RESULTS_CSV = MARTS_DIR / "ab_test_results.csv"
+MART_FORECAST_RESULTS_CSV = MARTS_DIR / "forecast_results.csv"
+MART_RECOMMENDATION_MATRIX_CSV = MARTS_DIR / "recommendation_matrix.csv"
 
 SQL_DIR = PROJECT_ROOT / "sql"
 

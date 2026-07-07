@@ -27,7 +27,7 @@ LOCK_REQUIRED_STRINGS = [
     "validate_data.py",
     "generate_week1_data_lock.py",
     "Week 2 boundary",
-    "Campaign KPI marts",
+    "week2_analytics_lock.md",
 ]
 
 
@@ -50,10 +50,10 @@ def test_week1_lock_doc_does_not_contain_test_artifacts(term: str):
     assert term not in read_text(WEEK1_DATA_LOCK_DOC)
 
 
-def test_week1_lock_doc_does_not_claim_week2_complete():
+def test_week1_lock_doc_does_not_claim_phase3_complete():
     content = read_text(WEEK1_DATA_LOCK_DOC).lower()
-    assert "week 2 complete" not in content
-    assert "tableau" in content or "excel" in content or "week 2" in content
+    assert "tableau dashboard complete" not in content
+    assert "week2_analytics_lock.md" in content
 
 
 def test_generate_lock_module_has_main():

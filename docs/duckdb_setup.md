@@ -255,7 +255,39 @@ Output (gitignored):
 
 ---
 
-## Next step
+## Day 13: Tableau / Excel exports
 
-Day 12 recommendations and executive summary are complete.
-Proceed to **Day 13: export dashboard data** (`export_dashboard_data.py`).
+Export populated marts to CSV, build the Excel stakeholder workbook, and stage Tableau inputs:
+
+```bash
+python scripts/export_dashboard_data.py
+python scripts/validate_data.py
+```
+
+Optional S3 upload of mart CSVs, exports, and workbook:
+
+```bash
+python scripts/export_dashboard_data.py --upload-s3
+```
+
+| Source | Output |
+|--------|--------|
+| DuckDB marts + `recommendations_summary.json` | `data/marts/*.csv`, `data/exports/*.csv`, `excel/marketing_executive_workbook.xlsx` |
+
+Output (gitignored):
+
+- `data/processed/export_dashboard_summary.json`
+- `data/exports/tableau_data_manifest.json`
+
+---
+
+## Phase 3 boundary
+
+Mart exports for Tableau and Excel are complete.
+Proceed to **Phase 3: Tableau dashboard build** (6 pages) and **Excel stakeholder workbook polish**.
+
+After the full Week 2 pipeline passes validation:
+
+```bash
+python scripts/generate_week2_analytics_lock.py
+```

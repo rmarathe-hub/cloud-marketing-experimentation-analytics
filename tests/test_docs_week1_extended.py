@@ -91,7 +91,15 @@ DOC_KEYWORDS = {
         "500,000",
         "64,000",
         "generate_week1_data_lock.py",
-        "Week 2 boundary",
+        "week2_analytics_lock.md",
+    ],
+    "week2_analytics_lock.md": [
+        "Locked",
+        "16.4074%",
+        "mart_device_app_performance",
+        "generate_week2_analytics_lock.py",
+        "Phase 3 boundary",
+        "recommendation_matrix.csv",
     ],
 }
 
@@ -121,6 +129,11 @@ def test_data_dictionary_mentions_locked_row_counts() -> None:
     content = read_text(DOCS_DIR / "data_dictionary.md")
     assert "500,000" in content or "500000" in content
     assert "64,000" in content or "64000" in content
+
+
+def test_readme_links_week2_lock_doc() -> None:
+    readme = read_text(PROJECT_ROOT / "README.md")
+    assert "week2_analytics_lock.md" in readme
 
 
 def test_readme_links_week1_lock_doc() -> None:

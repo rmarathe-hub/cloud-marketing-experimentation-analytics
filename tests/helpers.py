@@ -58,6 +58,7 @@ REQUIRED_DOCS = [
     "aws_s3_setup.md",
     "duckdb_setup.md",
     "week1_data_lock.md",
+    "week2_analytics_lock.md",
     "ab_test_methodology.md",
     "forecast_methodology.md",
     "recommendations.md",
@@ -112,6 +113,7 @@ WEEK2_SCRIPTS_IMPLEMENTED = (
     "run_ab_test_analysis.py",
     "run_ctr_forecast.py",
     "generate_recommendations.py",
+    "export_dashboard_data.py",
 )
 
 WEEK2_SCRIPTS_PENDING = tuple(
@@ -181,6 +183,107 @@ WEEK1_LOCKED = {
     "avazu_app_id_unique": 1_641,
     "avazu_site_id_unique": 1_704,
 }
+
+WEEK2_LOCKED = {
+    "campaign_kpi_rows": 1,
+    "ctr_trend_rows": 4,
+    "segment_performance_rows": 83,
+    "forecast_input_rows": 4,
+    "forecast_result_rows": 1,
+    "ab_test_result_rows": 3,
+    "recommendation_count": 10,
+    "recommendation_scale": 6,
+    "recommendation_pause": 3,
+    "recommendation_retest": 1,
+    "export_count": 6,
+    "overall_ctr_ratio": 0.164074,
+    "overall_ctr_pct": 16.4074,
+    "top_segment_ctr_ratio": 0.25251,
+    "top_segment_impressions": 68_033,
+    "mens_email_absolute_lift": 0.07659,
+    "mens_email_relative_lift_pct": 72.1405,
+    "womens_email_absolute_lift": 0.045233,
+    "womens_email_relative_lift_pct": 42.6055,
+    "forecast_mape": 314.442443,
+    "forecast_model": "moving_average_3",
+    "significant_treatments": ("mens_email", "womens_email"),
+}
+
+README_WEEK2_COMPLETE_PHRASES = [
+    "Week 2 analytics + exports | ✅ Complete",
+]
+
+ALL_SCRIPTS = (
+    *REQUIRED_SCRIPTS,
+    *WEEK2_SCRIPTS_IMPLEMENTED,
+    "generate_week2_analytics_lock.py",
+)
+
+VALIDATION_CHECK_NAMES = (
+    "raw_avazu_ads_row_count",
+    "raw_hillstrom_email_row_count",
+    "stg_ad_events_row_count",
+    "stg_email_experiment_row_count",
+    "stg_ad_events_ctr",
+    "stg_email_experiment_visit_rate",
+    "stg_email_experiment_treatment_groups",
+    "mart_campaign_kpis_populated",
+    "mart_campaign_kpis_ctr",
+    "mart_ctr_trends_populated",
+    "mart_ctr_trends_impressions",
+    "mart_ctr_trends_ctr",
+    "mart_device_app_performance_populated",
+    "mart_device_app_performance_impressions",
+    "mart_device_app_performance_click_share",
+    "mart_ab_test_results_populated",
+    "mart_ab_test_results_group_counts",
+    "mart_ab_test_results_recipients",
+    "mart_ab_test_results_overall_conversion_rate",
+    "mart_ab_test_results_treatment_significance",
+    "mart_forecast_inputs_populated",
+    "mart_forecast_inputs_impressions",
+    "mart_forecast_inputs_ctr",
+    "mart_forecast_results_populated",
+    "mart_forecast_results_metrics",
+)
+
+MART_CSV_EXPORTS = {
+    "campaign_kpis.csv": "campaign_kpi_rows",
+    "ctr_trends.csv": "ctr_trend_rows",
+    "segment_performance.csv": "segment_performance_rows",
+    "ab_test_results.csv": "ab_test_result_rows",
+    "forecast_results.csv": "forecast_result_rows",
+    "recommendation_matrix.csv": "recommendation_count",
+}
+
+EXCEL_WORKBOOK_SHEETS = (
+    "Campaign_KPIs",
+    "CTR_Trends",
+    "Segment_Performance",
+    "AB_Test_Results",
+    "Forecast_Results",
+    "Recommendations",
+    "AB_Calculator",
+)
+
+PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
+    "Tableau dashboard | ✅ Complete",
+    "Excel stakeholder workbook | ✅ Complete",
+    "Final README case study | ✅ Complete",
+    "tableau dashboard complete",
+    "excel workbook complete",
+    "excel polish complete",
+    "final readme case study complete",
+    "resume bullets complete",
+    "interview prep complete",
+]
+
+PHASE3_FORBIDDEN_TRACKED_PATTERNS = (
+    r"^tableau/.+\.twbx$",
+    r"^tableau/.+\.twb$",
+    r"^tableau/screenshots/.+\.(png|jpg|jpeg|gif|webp)$",
+    r"^excel/screenshots/.+\.(png|jpg|jpeg|gif|webp)$",
+)
 
 HILLSTROM_RAW_SEGMENTS = {
     "Womens E-Mail": 21_387,
@@ -299,13 +402,22 @@ PATH_CONSTANTS = [
     "RECOMMENDATIONS_SUMMARY",
     "RECOMMENDATIONS_DOC",
     "EXECUTIVE_SUMMARY_DOC",
+    "EXPORT_DASHBOARD_SUMMARY",
+    "EXCEL_WORKBOOK",
+    "MART_CAMPAIGN_KPIS_CSV",
+    "MART_CTR_TRENDS_CSV",
+    "MART_SEGMENT_PERFORMANCE_CSV",
+    "MART_AB_TEST_RESULTS_CSV",
+    "MART_FORECAST_RESULTS_CSV",
+    "MART_RECOMMENDATION_MATRIX_CSV",
     "WEEK1_DATA_LOCK_DOC",
+    "WEEK2_ANALYTICS_LOCK_DOC",
     "SQL_DIR",
 ]
 
 SCRIPTS_WITH_MAIN = [
     name for name in REQUIRED_SCRIPTS if name not in {"paths.py", "cleaning_utils.py"}
-] + list(WEEK2_SCRIPTS_IMPLEMENTED)
+] + list(WEEK2_SCRIPTS_IMPLEMENTED) + ["generate_week2_analytics_lock.py"]
 
 SCRIPTS_HELPER_ONLY = ["paths.py", "cleaning_utils.py"]
 
@@ -619,6 +731,37 @@ def run_implemented_week2_analytics(config, processed_dir: Path) -> None:
         )
 
 
+def run_full_week2_pipeline(
+    config,
+    processed_dir: Path,
+    *,
+    docs_dir: Path,
+    marts_dir: Path,
+    exports_dir: Path,
+    excel_path: Path,
+) -> None:
+    """Run analytics, recommendations, and export scripts (Week 2 end-to-end)."""
+    import export_dashboard_data as dashboard_exports
+    import generate_recommendations as recommendations
+
+    run_implemented_week2_analytics(config, processed_dir)
+    recommendations.generate_recommendations(
+        config=config,
+        recommendations_path=docs_dir / "recommendations.md",
+        executive_path=docs_dir / "executive_summary.md",
+        summary_path=processed_dir / "recommendations_summary.json",
+    )
+    dashboard_exports.export_dashboard_data(
+        config=config,
+        marts_dir=marts_dir,
+        exports_dir=exports_dir,
+        excel_path=excel_path,
+        recommendations_summary_path=processed_dir / "recommendations_summary.json",
+        summary_path=processed_dir / "export_dashboard_summary.json",
+        upload_to_s3=False,
+    )
+
+
 def assert_no_secret_patterns(text: str, source: str = "content") -> None:
     lowered = text.lower()
     for pattern in SECRET_PATTERNS:
@@ -632,3 +775,57 @@ def import_script_fresh(module_name: str):
     if full_name in sys.modules:
         del sys.modules[full_name]
     return importlib.import_module(full_name)
+
+
+def production_exports_available() -> bool:
+    from paths import EXPORT_DASHBOARD_SUMMARY, MARTS_DIR
+
+    if not EXPORT_DASHBOARD_SUMMARY.exists():
+        return False
+    payload = load_json(EXPORT_DASHBOARD_SUMMARY)
+    if not payload.get("success"):
+        return False
+    return (MARTS_DIR / "campaign_kpis.csv").exists()
+
+
+def production_marts_populated() -> bool:
+    if not local_duckdb_available():
+        return False
+    import duckdb
+    from paths import DUCKDB_DEFAULT_PATH
+
+    connection = duckdb.connect(str(DUCKDB_DEFAULT_PATH), read_only=True)
+    try:
+        count = connection.execute("SELECT COUNT(*) FROM mart_campaign_kpis").fetchone()[0]
+        return int(count) > 0
+    finally:
+        connection.close()
+
+
+def assert_csv_contract(csv_path: Path, min_rows: int = 1) -> pd.DataFrame:
+    assert csv_path.is_file(), f"Missing CSV: {csv_path}"
+    frame = pd.read_csv(csv_path)
+    assert len(frame) >= min_rows, f"{csv_path.name} has fewer than {min_rows} rows"
+    return frame
+
+
+def assert_excel_workbook_contract(workbook_path: Path) -> None:
+    from openpyxl import load_workbook
+
+    assert workbook_path.is_file(), f"Missing workbook: {workbook_path}"
+    workbook = load_workbook(workbook_path, read_only=True)
+    try:
+        assert workbook.sheetnames == list(EXCEL_WORKBOOK_SHEETS)
+    finally:
+        workbook.close()
+
+
+def assert_no_phase3_claims(text: str, source: str) -> None:
+    lowered = text.lower()
+    for phrase in PHASE3_FORBIDDEN_COMPLETE_PHRASES:
+        assert phrase.lower() not in lowered, f"{source} claims Phase 3 complete: {phrase}"
+
+
+def iter_tracked_text_files() -> list[Path]:
+    tracked = git_tracked_files()
+    return [PROJECT_ROOT / path for path in tracked if path.endswith((".py", ".md", ".ini", ".txt", ".example"))]

@@ -42,7 +42,12 @@ def test_path_constant_inside_project_root(attr_name: str) -> None:
         ("FUNNEL_SEGMENT_SUMMARY", "funnel_segment_summary.json"),
         ("AB_TEST_SUMMARY", "ab_test_summary.json"),
         ("FORECAST_SUMMARY", "forecast_summary.json"),
+        ("EXPORT_DASHBOARD_SUMMARY", "export_dashboard_summary.json"),
+        ("EXCEL_WORKBOOK", "marketing_executive_workbook.xlsx"),
+        ("MART_CAMPAIGN_KPIS_CSV", "campaign_kpis.csv"),
+        ("MART_RECOMMENDATION_MATRIX_CSV", "recommendation_matrix.csv"),
         ("WEEK1_DATA_LOCK_DOC", "week1_data_lock.md"),
+        ("WEEK2_ANALYTICS_LOCK_DOC", "week2_analytics_lock.md"),
     ],
 )
 def test_path_filenames(path_attr: str, expected_name: str) -> None:
