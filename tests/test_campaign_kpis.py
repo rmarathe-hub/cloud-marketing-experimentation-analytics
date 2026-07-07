@@ -237,4 +237,5 @@ def test_populated_mart_tables_constant():
         "mart_campaign_kpis",
         "mart_ctr_trends",
         "mart_device_app_performance",
+        "mart_ab_test_results",
     )

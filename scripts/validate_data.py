@@ -27,6 +27,7 @@ POPULATED_MART_TABLES = (
     "mart_campaign_kpis",
     "mart_ctr_trends",
     "mart_device_app_performance",
+    "mart_ab_test_results",
 )
 
 PENDING_MART_TABLES = tuple(
@@ -397,6 +398,125 @@ def validate_funnel_segment_marts(
     return results
 
 
+def validate_ab_test_mart(
+    connection: duckdb.DuckDBPyConnection,
+    expectations: dict[str, Any],
+    tolerance: float = 0.0001,
+) -> list[ValidationResult]:
+    results: list[ValidationResult] = []
+    expected_counts = expectations["cleaning"]["hillstrom"]["treatment_group_counts"]
+    expected_visit_rate = expectations["cleaning"]["hillstrom"]["visit_rate"]
+    expected_hillstrom_rows = expectations["cleaning"]["hillstrom"]["output_rows"]
+
+    row_count = get_table_row_count(connection, "mart_ab_test_results")
+    populated = row_count == len(expected_counts)
+    results.append(
+        ValidationResult(
+            check_name="mart_ab_test_results_populated",
+            status="pass" if populated else "fail",
+            expected=len(expected_counts),
+            actual=row_count,
+            message=(
+                f"mart_ab_test_results has {row_count:,} treatment row(s)"
+                if populated
+                else "mart_ab_test_results is empty or incomplete; run run_ab_test_analysis.py"
+            ),
+        )
+    )
+
+    mart_counts_rows = connection.execute(
+        """
+        SELECT treatment_group, recipients
+        FROM mart_ab_test_results
+        ORDER BY treatment_group
+        """
+    ).fetchall()
+    actual_counts = {row[0]: int(row[1]) for row in mart_counts_rows}
+    counts_match = populated and actual_counts == expected_counts
+    results.append(
+        ValidationResult(
+            check_name="mart_ab_test_results_group_counts",
+            status="pass" if counts_match else "fail",
+            expected=expected_counts,
+            actual=actual_counts,
+            message=(
+                "A/B mart treatment group counts match cleaning summary"
+                if counts_match
+                else "A/B mart treatment group counts do not match cleaning summary"
+            ),
+        )
+    )
+
+    total_recipients = sum(actual_counts.values()) if populated else 0
+    recipients_match = populated and total_recipients == int(expected_hillstrom_rows)
+    results.append(
+        ValidationResult(
+            check_name="mart_ab_test_results_recipients",
+            status="pass" if recipients_match else "fail",
+            expected=expected_hillstrom_rows,
+            actual=total_recipients,
+            message=(
+                "A/B mart recipients reconcile with Hillstrom staging rows"
+                if recipients_match
+                else "A/B mart recipients do not reconcile with Hillstrom staging rows"
+            ),
+        )
+    )
+
+    weighted_rate = connection.execute(
+        """
+        SELECT CASE
+            WHEN SUM(recipients) = 0 THEN 0.0
+            ELSE SUM(conversions)::DOUBLE / SUM(recipients)::DOUBLE
+        END
+        FROM mart_ab_test_results
+        """
+    ).fetchone()[0]
+    weighted_rate = None if weighted_rate is None else float(weighted_rate)
+    rate_match = (
+        populated
+        and weighted_rate is not None
+        and abs(weighted_rate - float(expected_visit_rate)) <= tolerance
+    )
+    results.append(
+        ValidationResult(
+            check_name="mart_ab_test_results_overall_conversion_rate",
+            status="pass" if rate_match else "fail",
+            expected=expected_visit_rate,
+            actual=round(weighted_rate, 6) if weighted_rate is not None else None,
+            message=(
+                "A/B mart weighted conversion rate matches Hillstrom visit rate"
+                if rate_match
+                else "A/B mart weighted conversion rate does not match Hillstrom visit rate"
+            ),
+        )
+    )
+
+    treatment_p_values = connection.execute(
+        """
+        SELECT COUNT(*)
+        FROM mart_ab_test_results
+        WHERE treatment_group != 'control' AND p_value IS NOT NULL
+        """
+    ).fetchone()[0]
+    expected_treatment_rows = len(expected_counts) - 1
+    significance_ready = populated and int(treatment_p_values) == expected_treatment_rows
+    results.append(
+        ValidationResult(
+            check_name="mart_ab_test_results_treatment_significance",
+            status="pass" if significance_ready else "fail",
+            expected=expected_treatment_rows,
+            actual=int(treatment_p_values),
+            message=(
+                "Treatment rows include significance test outputs"
+                if significance_ready
+                else "Treatment rows missing significance test outputs"
+            ),
+        )
+    )
+    return results
+
+
 def validate_treatment_groups(
     connection: duckdb.DuckDBPyConnection,
     expectations: dict[str, Any],
@@ -448,6 +568,7 @@ def run_validation(
         checks.append(validate_treatment_groups(connection, expectations))
         checks.extend(validate_campaign_kpi_mart(connection, expectations))
         checks.extend(validate_funnel_segment_marts(connection, expectations))
+        checks.extend(validate_ab_test_mart(connection, expectations))
         checks.extend(validate_pending_mart_tables_empty(connection))
     finally:
         connection.close()

@@ -104,6 +104,7 @@ WEEK2_ALL_SCRIPTS = [
 WEEK2_SCRIPTS_IMPLEMENTED = (
     "run_campaign_kpis.py",
     "run_funnel_segment_analysis.py",
+    "run_ab_test_analysis.py",
 )
 
 WEEK2_SCRIPTS_PENDING = tuple(
@@ -128,6 +129,7 @@ DUCKDB_MART_TABLES_POPULATED = (
     "mart_campaign_kpis",
     "mart_ctr_trends",
     "mart_device_app_performance",
+    "mart_ab_test_results",
 )
 
 DUCKDB_MART_TABLES_PENDING = tuple(
@@ -173,7 +175,7 @@ WEEK1_LOCKED = {
     "mens_email_recipients": 21_307,
     "womens_email_recipients": 21_387,
     "duckdb_table_count": 10,
-    "validation_check_count": 18,
+    "validation_check_count": 22,
     "s3_upload_count": 4,
     "avazu_device_id_unique": 41_413,
     "avazu_app_id_unique": 1_641,
@@ -256,7 +258,6 @@ TRACKED_FORBIDDEN_PATTERNS = [
 ]
 
 README_FORBIDDEN_COMPLETE_PHRASES = [
-    "A/B test analysis | ✅ Complete",
     "CTR forecasting | ✅ Complete",
     "Tableau dashboard | ✅ Complete",
     "Excel stakeholder workbook | ✅ Complete",
@@ -294,6 +295,7 @@ PATH_CONSTANTS = [
     "DATA_VALIDATION_SUMMARY",
     "CAMPAIGN_KPI_SUMMARY",
     "FUNNEL_SEGMENT_SUMMARY",
+    "AB_TEST_SUMMARY",
     "WEEK1_DATA_LOCK_DOC",
     "SQL_DIR",
 ]
@@ -576,17 +578,36 @@ def production_validation_summary_available() -> bool:
 
 def run_implemented_week2_analytics(config, processed_dir: Path) -> None:
     """Run all implemented Week 2 analytics scripts (for validation integration tests)."""
+    import duckdb
+    import run_ab_test_analysis as ab_test
     import run_campaign_kpis as campaign_kpis
     import run_funnel_segment_analysis as funnel_segment
 
-    campaign_kpis.run_campaign_kpis(
-        config=config,
-        summary_path=processed_dir / "campaign_kpi_summary.json",
-    )
-    funnel_segment.run_funnel_segment_analysis(
-        config=config,
-        summary_path=processed_dir / "funnel_segment_summary.json",
-    )
+    connection = duckdb.connect(str(config.database_path))
+    try:
+        avazu_rows = int(
+            connection.execute("SELECT COUNT(*) FROM stg_ad_events").fetchone()[0]
+        )
+        hillstrom_rows = int(
+            connection.execute("SELECT COUNT(*) FROM stg_email_experiment").fetchone()[0]
+        )
+    finally:
+        connection.close()
+
+    if avazu_rows > 0:
+        campaign_kpis.run_campaign_kpis(
+            config=config,
+            summary_path=processed_dir / "campaign_kpi_summary.json",
+        )
+        funnel_segment.run_funnel_segment_analysis(
+            config=config,
+            summary_path=processed_dir / "funnel_segment_summary.json",
+        )
+    if hillstrom_rows > 0:
+        ab_test.run_ab_test_analysis(
+            config=config,
+            summary_path=processed_dir / "ab_test_summary.json",
+        )
 
 
 def assert_no_secret_patterns(text: str, source: str = "content") -> None:

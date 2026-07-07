@@ -255,9 +255,9 @@ python scripts/load_to_duckdb.py
 python scripts/validate_data.py
 python scripts/run_campaign_kpis.py
 python scripts/run_funnel_segment_analysis.py
+python scripts/run_ab_test_analysis.py
 
 # Week 2 — remaining analytics
-python scripts/run_ab_test_analysis.py
 python scripts/run_ctr_forecast.py
 python scripts/export_dashboard_data.py
 
@@ -280,7 +280,7 @@ pytest -q
 | Week 1 tests + docs lock | ✅ Complete |
 | Campaign KPI marts | ✅ Complete |
 | Funnel + segment analysis | ✅ Complete |
-| A/B test analysis | 🔲 Pending |
+| A/B test analysis | ✅ Complete |
 | CTR forecasting | 🔲 Pending |
 | Tableau dashboard | 🔲 Pending |
 | Excel stakeholder workbook | 🔲 Pending |

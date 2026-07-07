@@ -189,6 +189,30 @@ Output (gitignored):
 
 ---
 
+## Day 10: A/B test analysis
+
+Build Hillstrom email experiment results with lift and significance:
+
+```bash
+python scripts/run_ab_test_analysis.py
+python scripts/validate_data.py
+```
+
+| Source | Target table |
+|--------|----------------|
+| `stg_email_experiment` | `mart_ab_test_results` |
+
+The script compares `mens_email` and `womens_email` against `control` using
+two-proportion z-tests, 95% confidence intervals, and incremental revenue.
+
+Methodology: [ab_test_methodology.md](ab_test_methodology.md)
+
+Output (gitignored):
+
+- `data/processed/ab_test_summary.json`
+
+---
+
 ## Next step
 
-Day 9 funnel and segmentation marts are complete. Proceed to **Day 10: A/B test analysis**.
+Day 10 A/B test analysis is complete. Proceed to **Day 11: CTR forecasting**.

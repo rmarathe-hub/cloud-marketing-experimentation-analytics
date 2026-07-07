@@ -24,6 +24,7 @@ DUCKDB_LOAD_SUMMARY = PROCESSED_DIR / "duckdb_load_summary.json"
 DATA_VALIDATION_SUMMARY = PROCESSED_DIR / "data_validation_summary.json"
 CAMPAIGN_KPI_SUMMARY = PROCESSED_DIR / "campaign_kpi_summary.json"
 FUNNEL_SEGMENT_SUMMARY = PROCESSED_DIR / "funnel_segment_summary.json"
+AB_TEST_SUMMARY = PROCESSED_DIR / "ab_test_summary.json"
 WEEK1_DATA_LOCK_DOC = DOCS_DIR / "week1_data_lock.md"
 
 SQL_DIR = PROJECT_ROOT / "sql"

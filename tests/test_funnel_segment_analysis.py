@@ -261,8 +261,16 @@ def test_run_implemented_week2_analytics_helper(tmp_path):
 
     connection = duckdb.connect(str(bundle["config"].database_path), read_only=True)
     try:
-        for table_name in DUCKDB_MART_TABLES_POPULATED:
+        for table_name in (
+            "mart_campaign_kpis",
+            "mart_ctr_trends",
+            "mart_device_app_performance",
+        ):
             count = connection.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
             assert count > 0
+        ab_count = connection.execute(
+            "SELECT COUNT(*) FROM mart_ab_test_results"
+        ).fetchone()[0]
+        assert ab_count == 0
     finally:
         connection.close()

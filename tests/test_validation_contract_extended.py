@@ -68,8 +68,8 @@ def test_validation_detects_non_empty_mart(tmp_path):
     db_setup.create_database(config=config, sql_dir=SQL_DIR)
     connection = duckdb.connect(str(bundle_db))
     connection.execute(
-        "INSERT INTO mart_ab_test_results (treatment_group, treatment_label, recipients) "
-        "VALUES ('control', 'Control', 1)"
+        "INSERT INTO mart_forecast_inputs (event_date, event_hour, impressions, clicks, ctr) "
+        "VALUES ('2014-10-21', 8, 1, 1, 1.0)"
     )
     connection.close()
 
@@ -90,7 +90,7 @@ def test_validation_detects_non_empty_mart(tmp_path):
         expectations=expectations,
         summary_path=tmp_path / "data_validation_summary.json",
     )
-    mart_failures = [c for c in summary["checks"] if c["check_name"] == "mart_ab_test_results_empty"]
+    mart_failures = [c for c in summary["checks"] if c["check_name"] == "mart_forecast_inputs_empty"]
     assert mart_failures
     assert mart_failures[0]["status"] == "fail"
 

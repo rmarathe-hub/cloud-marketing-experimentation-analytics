@@ -40,6 +40,7 @@ def test_path_constant_inside_project_root(attr_name: str) -> None:
         ("DATA_VALIDATION_SUMMARY", "data_validation_summary.json"),
         ("CAMPAIGN_KPI_SUMMARY", "campaign_kpi_summary.json"),
         ("FUNNEL_SEGMENT_SUMMARY", "funnel_segment_summary.json"),
+        ("AB_TEST_SUMMARY", "ab_test_summary.json"),
         ("WEEK1_DATA_LOCK_DOC", "week1_data_lock.md"),
     ],
 )

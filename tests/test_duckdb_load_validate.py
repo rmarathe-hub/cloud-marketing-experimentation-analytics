@@ -212,12 +212,13 @@ def test_validation_summary_schema(tmp_path):
     assert all("check_name" in check for check in summary["checks"])
 
 
-def test_readme_marks_day9_funnel_segment_complete_not_full_week2():
+def test_readme_marks_day10_ab_test_complete_not_full_week2():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "DuckDB load + validation | ✅ Complete" in readme
     assert "Campaign KPI marts | ✅ Complete" in readme
     assert "Funnel + segment analysis | ✅ Complete" in readme
-    assert "A/B test analysis | 🔲 Pending" in readme
+    assert "A/B test analysis | ✅ Complete" in readme
+    assert "CTR forecasting | 🔲 Pending" in readme
 
 
 def test_validate_script_exists_load_script_exists():
@@ -225,7 +226,8 @@ def test_validate_script_exists_load_script_exists():
     assert (PROJECT_ROOT / "scripts" / "validate_data.py").exists()
     assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
     assert (PROJECT_ROOT / "scripts" / "run_funnel_segment_analysis.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "run_ab_test_analysis.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "run_ab_test_analysis.py").exists()
+    assert not (PROJECT_ROOT / "scripts" / "run_ctr_forecast.py").exists()
 
 
 def test_duckdb_setup_doc_mentions_day6_load():

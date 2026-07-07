@@ -221,7 +221,8 @@ def test_readme_does_not_claim_week2_marts_complete():
     assert "DuckDB load + validation | ✅ Complete" in readme
     assert "Campaign KPI marts | ✅ Complete" in readme
     assert "Funnel + segment analysis | ✅ Complete" in readme
-    assert "A/B test analysis | 🔲 Pending" in readme
+    assert "A/B test analysis | ✅ Complete" in readme
+    assert "CTR forecasting | 🔲 Pending" in readme
 
 
 def test_upload_script_does_not_contain_secrets():
