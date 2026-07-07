@@ -213,17 +213,19 @@ Checks passed: **{validation.get('passed_count', 0)} / {validation.get('passed_c
 1. Do not edit locked statistics manually in stakeholder docs.
 2. Re-run the full Week 2 pipeline if mart logic or source data changes.
 3. Regenerate this document with `generate_week2_analytics_lock.py`.
-4. Re-run `pytest -q -m "not network and not slow"` before starting Phase 3.
+4. Re-run `pytest -q` after any pipeline or portfolio doc changes.
 
 ---
 
 ## Phase 3 boundary
 
-Week 2 analytics and exports end here. Phase 3 status:
+All Phase 3 portfolio deliverables are **complete**:
 
-- Tableau dashboard screenshots (6 PNG pages) — **complete** (`tableau/screenshots/`, `docs/tableau_dashboard_guide.md`)
-- Excel workbook screenshots (6 PNG pages) — **complete** (`excel/screenshots/`, `docs/excel_workbook_guide.md`)
-- Final README case study — **complete** (Key Findings section in README)
+- Tableau dashboard screenshots (6 PNG pages) — `tableau/screenshots/`, `docs/tableau_dashboard_guide.md`
+- Excel workbook screenshots (6 PNG pages) — `excel/screenshots/`, `docs/excel_workbook_guide.md`
+- Final README case study — Key Findings section in README
+- Final tests + cleanup — `docs/portfolio_completion.md`
+- Resume / interview prep — `docs/resume_bullets.md`, `docs/interview_prep.md`, `docs/linkedin_summary.md`
 
 The Tableau `.twbx` and Excel `.xlsx` workbooks are local/gitignored and optional; PNG screenshots are the tracked portfolio artifacts.
 """

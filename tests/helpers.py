@@ -65,6 +65,10 @@ REQUIRED_DOCS = [
     "executive_summary.md",
     "tableau_dashboard_guide.md",
     "excel_workbook_guide.md",
+    "portfolio_completion.md",
+    "resume_bullets.md",
+    "interview_prep.md",
+    "linkedin_summary.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -273,10 +277,7 @@ EXCEL_WORKBOOK_SHEETS = (
     "AB_Calculator",
 )
 
-PHASE3_FORBIDDEN_COMPLETE_PHRASES = [
-    "resume bullets complete",
-    "interview prep complete",
-]
+PHASE3_FORBIDDEN_COMPLETE_PHRASES: list[str] = []
 
 EXCEL_SCREENSHOT_FILES = (
     "01_executive_summary.png",
@@ -418,6 +419,14 @@ README_TABLEAU_COMPLETE_PHRASES = [
 
 README_EXCEL_COMPLETE_PHRASES = [
     "Excel stakeholder workbook (screenshots) | ✅ Complete",
+]
+
+README_FINAL_TESTS_COMPLETE_PHRASES = [
+    "Final tests + cleanup | ✅ Complete",
+]
+
+README_PORTFOLIO_COMPLETE_PHRASES = [
+    "Resume bullets + interview prep | ✅ Complete",
 ]
 
 README_WEEK1_COMPLETE_PHRASES = [

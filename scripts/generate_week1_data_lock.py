@@ -235,13 +235,7 @@ Checks passed: **{validation.get('passed_count', 0)} / {validation.get('passed_c
 
 Week 1 data foundation ends here. Week 2 marketing analytics are documented in [week2_analytics_lock.md](week2_analytics_lock.md).
 
-Phase 3 deliverables are **not started**:
-
-- Tableau dashboard (6 pages)
-- Excel stakeholder workbook polish
-- Final README case study
-
-Proceed to Week 2 only after this lock document matches your local validation output.
+Phase 3 portfolio deliverables are documented in [portfolio_completion.md](portfolio_completion.md) and [week2_analytics_lock.md](week2_analytics_lock.md).
 """
 
 

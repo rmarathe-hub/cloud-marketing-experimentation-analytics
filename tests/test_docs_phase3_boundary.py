@@ -79,7 +79,8 @@ def test_project_plan_lists_excel_deliverable() -> None:
     assert "screenshots" in text.lower()
 
 
-def test_readme_does_not_claim_resume_docs_exist() -> None:
-    readme = read_text(PROJECT_ROOT / "README.md").lower()
-    assert "resume bullets complete" not in readme
-    assert "interview prep complete" not in readme
+def test_readme_links_resume_and_interview_docs() -> None:
+    readme = read_text(PROJECT_ROOT / "README.md")
+    assert "resume_bullets.md" in readme
+    assert "interview_prep.md" in readme
+    assert "linkedin_summary.md" in readme

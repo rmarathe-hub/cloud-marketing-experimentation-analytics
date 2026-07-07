@@ -129,6 +129,10 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [week2_analytics_lock.md](docs/week2_analytics_lock.md) | Locked Week 2 mart stats, exports, and validation |
 | [tableau_dashboard_guide.md](docs/tableau_dashboard_guide.md) | Tableau Desktop build guide (6 dashboard pages) |
 | [excel_workbook_guide.md](docs/excel_workbook_guide.md) | Excel executive workbook and screenshot guide |
+| [portfolio_completion.md](docs/portfolio_completion.md) | Final validation checklist and closure doc |
+| [resume_bullets.md](docs/resume_bullets.md) | Copy-ready resume bullets |
+| [interview_prep.md](docs/interview_prep.md) | Interview talking points and Q&A |
+| [linkedin_summary.md](docs/linkedin_summary.md) | LinkedIn project summary |
 
 ---
 
@@ -214,10 +218,21 @@ pytest -q -m s3
 pytest -q -m security
 pytest -q -m week1
 pytest -q -m week2
+pytest -q -m tableau
+pytest -q -m excel
+pytest -q -m portfolio
 ```
 
 Real-data tests (`data`, `slow`) skip automatically when local files are absent.
 AWS integration tests (`aws`, `network`) are excluded by default.
+
+Full validation (Day 20):
+
+```bash
+pytest -q
+```
+
+See [docs/portfolio_completion.md](docs/portfolio_completion.md) for the complete checklist.
 
 ---
 
@@ -434,6 +449,21 @@ Five findings from the locked analytics pipeline, illustrated in the dashboard s
 | Tableau dashboard (screenshots) | ✅ Complete |
 | Excel stakeholder workbook (screenshots) | ✅ Complete |
 | Final README case study | ✅ Complete |
+| Final tests + cleanup | ✅ Complete |
+| Resume bullets + interview prep | ✅ Complete |
+
+---
+
+## Portfolio & Interview
+
+Copy-ready materials for applications and interviews:
+
+| Doc | Use |
+|-----|-----|
+| [resume_bullets.md](docs/resume_bullets.md) | Resume and LinkedIn experience bullets |
+| [interview_prep.md](docs/interview_prep.md) | Elevator pitch, Q&A, metrics to memorize |
+| [linkedin_summary.md](docs/linkedin_summary.md) | LinkedIn Projects section copy |
+| [portfolio_completion.md](docs/portfolio_completion.md) | Final validation checklist |
 
 ---
 
@@ -446,7 +476,8 @@ Five findings from the locked analytics pipeline, illustrated in the dashboard s
 - Tableau dashboard screenshots (6 PNG pages in `tableau/screenshots/`)
 - Excel executive workbook screenshots (6 PNG pages in `excel/screenshots/`)
 - Recommendations and executive summary docs
-- pytest test suite
+- pytest test suite (1,700+ tests)
+- Portfolio completion, resume, and interview prep docs
 
 ---
 

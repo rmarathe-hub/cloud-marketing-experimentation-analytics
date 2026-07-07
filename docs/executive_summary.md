@@ -30,6 +30,6 @@ One-page stakeholder view of Week 2 marketing analytics findings.
 
 - Avazu is a single-day competition subsample; CTR is not a live campaign benchmark.
 - Hillstrom `converted` equals `visit`; revenue uses cleaned `spend`.
-- Tableau and Excel deliverables are still pending (Phase 3).
+- Tableau and Excel portfolio deliverables are complete (screenshot PNGs in `tableau/screenshots/` and `excel/screenshots/`).
 
 Full matrix: [recommendations.md](recommendations.md)

@@ -283,11 +283,19 @@ Output (gitignored):
 
 ## Phase 3 boundary
 
-Mart exports for Tableau and Excel are complete.
-Proceed to **Phase 3: Tableau dashboard build** (6 pages) and **Excel stakeholder workbook polish**.
+All Phase 3 portfolio deliverables are **complete**:
 
-After the full Week 2 pipeline passes validation:
+- Tableau dashboard screenshots — `tableau/screenshots/`
+- Excel workbook screenshots — `excel/screenshots/`
+- README case study — Key Findings section
+- Final tests + cleanup — [portfolio_completion.md](portfolio_completion.md)
+- Resume / interview prep — [resume_bullets.md](resume_bullets.md), [interview_prep.md](interview_prep.md)
+
+The Tableau `.twbx` and Excel `.xlsx` workbooks are local/gitignored and optional; PNG screenshots are the tracked portfolio artifacts.
+
+After the full pipeline passes validation:
 
 ```bash
 python scripts/generate_week2_analytics_lock.py
+pytest -q
 ```

@@ -15,7 +15,9 @@ from helpers import (
     PHASE3_FORBIDDEN_TRACKED_PATTERNS,
     PROJECT_ROOT,
     README_EXCEL_COMPLETE_PHRASES,
+    README_FINAL_TESTS_COMPLETE_PHRASES,
     README_FORBIDDEN_COMPLETE_PHRASES,
+    README_PORTFOLIO_COMPLETE_PHRASES,
     README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK1_COMPLETE_PHRASES,
     README_WEEK2_COMPLETE_PHRASES,
@@ -94,6 +96,16 @@ def test_readme_lists_excel_workbook_complete() -> None:
 
 def test_readme_lists_final_case_study_complete() -> None:
     assert "Final README case study | ✅ Complete" in README
+
+
+def test_readme_lists_final_tests_complete() -> None:
+    for phrase in README_FINAL_TESTS_COMPLETE_PHRASES:
+        assert phrase in README
+
+
+def test_readme_lists_portfolio_prep_complete() -> None:
+    for phrase in README_PORTFOLIO_COMPLETE_PHRASES:
+        assert phrase in README
 
 
 def test_readme_links_week1_and_week2_lock_docs() -> None:
@@ -177,6 +189,7 @@ def test_week2_lock_doc_states_phase3_boundary() -> None:
     assert "phase 3 boundary" in lock
     assert "screenshot" in lock
     assert "complete" in lock
+    assert "portfolio_completion.md" in lock
 
 
 def test_recommendations_doc_does_not_claim_excel_complete() -> None:
@@ -184,6 +197,7 @@ def test_recommendations_doc_does_not_claim_excel_complete() -> None:
     assert "excel stakeholder workbook | ✅ complete" not in text
 
 
-def test_executive_summary_mentions_phase3_pending() -> None:
+def test_executive_summary_mentions_portfolio_deliverables() -> None:
     text = read_text(DOCS_DIR / "executive_summary.md").lower()
-    assert "tableau" in text or "phase 3" in text or "pending" in text
+    assert "screenshot" in text or "complete" in text
+    assert "still pending" not in text

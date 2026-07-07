@@ -2,9 +2,11 @@
 
 Build plan for the Cloud Marketing Experimentation & Forecasting Analytics portfolio project.
 
+**Status:** All phases complete (Days 1–21).
+
 ---
 
-## Phase 1 — Data Foundation + AWS S3 + DuckDB
+## Phase 1 — Data Foundation + AWS S3 + DuckDB ✅
 
 | Day | Focus | Key Outputs |
 |-----|-------|-------------|
@@ -16,7 +18,7 @@ Build plan for the Cloud Marketing Experimentation & Forecasting Analytics portf
 | 6 | Load data + validation | Loaded tables, validation summary |
 | 7 | Week 1 tests + docs lock | pytest suite, locked data docs |
 
-## Phase 2 — Marketing Analytics
+## Phase 2 — Marketing Analytics ✅
 
 | Day | Focus | Key Outputs |
 |-----|-------|-------------|
@@ -28,42 +30,32 @@ Build plan for the Cloud Marketing Experimentation & Forecasting Analytics portf
 | 13 | Export marts for Tableau + Excel | CSV exports, S3 export upload |
 | 14 | Week 2 tests + README update | Analytics tests, updated status |
 
-## Phase 3 — Tableau, Excel, Polish
+## Phase 3 — Tableau, Excel, Polish ✅
 
 | Day | Focus | Key Outputs |
 |-----|-------|-------------|
-| 15–17 | Tableau dashboard (6 pages) | `.twbx` workbook + screenshots |
-| 18 | Excel stakeholder workbook | Pivot tables, A/B calculator, recommendation matrix |
+| 15–17 | Tableau dashboard (6 pages) | Screenshot PNGs in `tableau/screenshots/` |
+| 18 | Excel stakeholder workbook | Screenshot PNGs in `excel/screenshots/` |
 | 19 | Final README case study | 5 key findings with real numbers |
-| 20 | Final tests + cleanup | Full pytest pass, git hygiene check |
+| 20 | Final tests + cleanup | Full pytest pass, portfolio completion doc |
 | 21 | Resume bullets + interview prep | Resume, LinkedIn, talking points docs |
-
----
-
-## Priority Order (if time is tight)
-
-1. A/B testing analysis
-2. Tableau dashboard
-3. Excel workbook
-4. Forecasting
-5. S3 cloud layer
-6. Tests / docs polish
 
 ---
 
 ## Deliverables Checklist
 
-- [ ] AWS S3 bucket with raw / processed / marts / exports zones
-- [ ] DuckDB analytical database
-- [ ] Python cleaning and profiling scripts
-- [ ] SQL marts
-- [ ] A/B test analysis with statistical significance
-- [ ] CTR forecasting with accuracy metrics
-- [ ] Tableau dashboard with screenshots
-- [ ] Excel executive workbook with screenshots
-- [ ] Recommendations and executive summary
-- [ ] README case study with key findings
-- [ ] pytest test suite
+- [x] AWS S3 bucket with raw / processed / marts / exports zones
+- [x] DuckDB analytical database
+- [x] Python cleaning and profiling scripts
+- [x] SQL marts
+- [x] A/B test analysis with statistical significance
+- [x] CTR forecasting with accuracy metrics
+- [x] Tableau dashboard with screenshots
+- [x] Excel executive workbook with screenshots
+- [x] Recommendations and executive summary
+- [x] README case study with key findings
+- [x] pytest test suite
+- [x] Portfolio completion + interview prep docs
 
 ---
 
@@ -75,3 +67,5 @@ Build plan for the Cloud Marketing Experimentation & Forecasting Analytics portf
 | **This project** | Campaign analytics, A/B tests, forecasting | DuckDB, Tableau, Excel, AWS S3 |
 
 Non-overlapping tools and business domains for a strong data analyst intern portfolio.
+
+See [portfolio_completion.md](portfolio_completion.md) for final validation commands.

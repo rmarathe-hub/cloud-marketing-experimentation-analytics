@@ -9,6 +9,8 @@ from helpers import (
     PROJECT_ROOT,
     README_CASE_STUDY_COMPLETE_PHRASES,
     README_EXCEL_COMPLETE_PHRASES,
+    README_FINAL_TESTS_COMPLETE_PHRASES,
+    README_PORTFOLIO_COMPLETE_PHRASES,
     README_TABLEAU_COMPLETE_PHRASES,
     README_WEEK2_COMPLETE_PHRASES,
     WEEK2_SCRIPTS_PENDING,
@@ -33,6 +35,16 @@ def test_readme_marks_final_case_study_complete() -> None:
 
 def test_readme_marks_excel_workbook_complete() -> None:
     for phrase in README_EXCEL_COMPLETE_PHRASES:
+        assert phrase in README
+
+
+def test_readme_marks_final_tests_complete() -> None:
+    for phrase in README_FINAL_TESTS_COMPLETE_PHRASES:
+        assert phrase in README
+
+
+def test_readme_marks_portfolio_prep_complete() -> None:
+    for phrase in README_PORTFOLIO_COMPLETE_PHRASES:
         assert phrase in README
 
 
