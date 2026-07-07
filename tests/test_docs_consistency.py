@@ -134,6 +134,18 @@ pytestmark = pytest.mark.docs
                 "athena",
             ],
         ),
+        (
+            "week1_data_lock.md",
+            [
+                "locked",
+                "500,000",
+                "64,000",
+                "week 2",
+                "generate_week1_data_lock",
+                "validation",
+                "duckdb",
+            ],
+        ),
     ],
 )
 def test_doc_contains_required_terms(doc_name: str, required_terms: list[str]) -> None:

@@ -25,14 +25,14 @@ MART_TABLES = tuple(
 
 LOADED_TABLES = {
     "raw_avazu_ads": {
-        "profile_key": "avazu",
-        "cleaning_key": None,
-        "row_field": "row_count",
+        "profile_key": None,
+        "cleaning_key": "avazu",
+        "row_field": "input_rows",
     },
     "raw_hillstrom_email": {
-        "profile_key": "hillstrom",
-        "cleaning_key": None,
-        "row_field": "row_count",
+        "profile_key": None,
+        "cleaning_key": "hillstrom",
+        "row_field": "input_rows",
     },
     "stg_ad_events": {
         "profile_key": None,

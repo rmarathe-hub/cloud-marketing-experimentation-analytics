@@ -39,6 +39,10 @@ def test_readme_marks_duckdb_load_validation_complete() -> None:
     assert "DuckDB load + validation | ✅ Complete" in README
 
 
+def test_readme_marks_week1_lock_complete() -> None:
+    assert "Week 1 tests + docs lock | ✅ Complete" in README
+
+
 def test_schema_sql_files_exist_without_analytics_build_sql() -> None:
     sql_files = sorted((PROJECT_ROOT / "sql").glob("*.sql"))
     names = [path.name for path in sql_files]

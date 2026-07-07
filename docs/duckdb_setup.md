@@ -137,4 +137,4 @@ Outputs (gitignored):
 
 ## Next step
 
-After load and validation pass, proceed to **Day 7: Week 1 tests + docs lock**, then Week 2 analytics marts.
+Week 1 is complete. Proceed to **Week 2: Campaign KPI marts** (Day 8).

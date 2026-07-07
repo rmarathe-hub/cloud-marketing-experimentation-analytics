@@ -57,6 +57,7 @@ REQUIRED_DOCS = [
     "data_quality_report.md",
     "aws_s3_setup.md",
     "duckdb_setup.md",
+    "week1_data_lock.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -70,6 +71,7 @@ REQUIRED_SCRIPTS = [
     "create_duckdb_database.py",
     "load_to_duckdb.py",
     "validate_data.py",
+    "generate_week1_data_lock.py",
 ]
 
 REQUIRED_PACKAGES = [

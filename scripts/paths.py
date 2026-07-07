@@ -22,6 +22,7 @@ DUCKDB_DEFAULT_PATH = PROCESSED_DIR / "marketing_analytics.duckdb"
 DUCKDB_SETUP_SUMMARY = PROCESSED_DIR / "duckdb_setup_summary.json"
 DUCKDB_LOAD_SUMMARY = PROCESSED_DIR / "duckdb_load_summary.json"
 DATA_VALIDATION_SUMMARY = PROCESSED_DIR / "data_validation_summary.json"
+WEEK1_DATA_LOCK_DOC = DOCS_DIR / "week1_data_lock.md"
 
 SQL_DIR = PROJECT_ROOT / "sql"
 

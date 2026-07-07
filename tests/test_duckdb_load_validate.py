@@ -51,8 +51,8 @@ def _build_tiny_dataset_bundle(tmp_path: Path) -> dict[str, Path]:
     }
     cleaning_summary = {
         "datasets": {
-            "avazu": avazu_summary,
-            "hillstrom": hillstrom_summary,
+            "avazu": {**avazu_summary, "input_rows": len(pd.read_csv(avazu_raw))},
+            "hillstrom": {**hillstrom_summary, "input_rows": len(pd.read_csv(hillstrom_raw))},
         }
     }
 

@@ -125,6 +125,7 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [cost_controls.md](docs/cost_controls.md) | AWS cost-safety rules |
 | [aws_s3_setup.md](docs/aws_s3_setup.md) | S3 bucket, IAM, and upload setup |
 | [duckdb_setup.md](docs/duckdb_setup.md) | Local DuckDB schema and warehouse setup |
+| [week1_data_lock.md](docs/week1_data_lock.md) | Locked Week 1 dataset stats and pipeline contract |
 
 ---
 
@@ -166,6 +167,24 @@ Summaries written locally (gitignored):
 
 - `data/processed/duckdb_load_summary.json`
 - `data/processed/data_validation_summary.json`
+
+---
+
+## Week 1 Data Lock
+
+After the full Week 1 pipeline and validation pass locally:
+
+```bash
+python scripts/generate_week1_data_lock.py
+```
+
+This writes [docs/week1_data_lock.md](docs/week1_data_lock.md) with frozen dataset statistics, load status, and validation checkpoints.
+
+Run the full Week 1 test suite:
+
+```bash
+pytest -q -m "not network and not slow"
+```
 
 ---
 
@@ -241,6 +260,7 @@ pytest -q
 | AWS S3 setup + upload | ✅ Complete |
 | DuckDB warehouse setup | ✅ Complete |
 | DuckDB load + validation | ✅ Complete |
+| Week 1 tests + docs lock | ✅ Complete |
 | Campaign KPI marts | 🔲 Pending |
 | A/B test analysis | 🔲 Pending |
 | CTR forecasting | 🔲 Pending |
