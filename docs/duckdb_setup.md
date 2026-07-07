@@ -1,0 +1,108 @@
+# DuckDB Warehouse Setup
+
+Local analytical database for the Cloud Marketing Experimentation & Forecasting Analytics project.
+
+DuckDB runs **entirely on your machine** — no cloud warehouse, no extra AWS cost. See [cost_controls.md](cost_controls.md).
+
+---
+
+## Purpose
+
+Day 5 creates the **empty warehouse schema** only:
+
+- **Raw** tables mirror source CSV shape
+- **Staging** tables mirror cleaned Parquet shape
+- **Mart** tables are ready for Week 2 analytics outputs
+
+**Day 6** loads data into raw/staging tables and runs validation. Do not load data until that step.
+
+---
+
+## Database file
+
+| Setting | Default |
+|---------|---------|
+| Path | `data/processed/marketing_analytics.duckdb` |
+| Env var | `DUCKDB_PATH` in `.env` |
+
+The `.duckdb` file is **gitignored**. Never commit database files.
+
+---
+
+## Schema layout
+
+| Layer | Tables |
+|-------|--------|
+| Raw | `raw_avazu_ads`, `raw_hillstrom_email` |
+| Staging | `stg_ad_events`, `stg_email_experiment` |
+| Mart | `mart_campaign_kpis`, `mart_ctr_trends`, `mart_device_app_performance`, `mart_ab_test_results`, `mart_forecast_inputs`, `mart_forecast_results` |
+
+SQL definitions live in `sql/`:
+
+```
+sql/01_raw_tables.sql
+sql/02_staging_tables.sql
+sql/03_mart_tables.sql
+```
+
+Column details: [data_dictionary.md](data_dictionary.md)
+
+---
+
+## Configuration
+
+`.env` field:
+
+```bash
+DUCKDB_PATH=data/processed/marketing_analytics.duckdb
+```
+
+No AWS credentials are required for DuckDB setup.
+
+---
+
+## Create the database
+
+From the project root with your virtual environment active:
+
+```bash
+python scripts/create_duckdb_database.py
+```
+
+Expected output:
+
+- Local `.duckdb` file created (or updated safely on rerun)
+- 10 empty tables across raw / staging / mart layers
+- `data/processed/duckdb_setup_summary.json` written locally (gitignored)
+
+The script is **safe to rerun** — it uses `CREATE TABLE IF NOT EXISTS`.
+
+---
+
+## Verify tables (optional)
+
+```bash
+python -c "
+import duckdb
+con = duckdb.connect('data/processed/marketing_analytics.duckdb', read_only=True)
+print(con.execute('SHOW TABLES').fetchdf())
+con.close()
+"
+```
+
+All tables should exist with **0 rows** after Day 5.
+
+---
+
+## What Day 5 does NOT do
+
+- Does **not** load CSV or Parquet data (Day 6)
+- Does **not** build analytics marts with SQL (Week 2)
+- Does **not** upload to S3
+- Does **not** require Glue, Lambda, EC2, Redshift, or Athena
+
+---
+
+## Next step
+
+After the schema exists, proceed to **Day 6: Load data + validation** (`load_to_duckdb.py`, `validate_data.py`).

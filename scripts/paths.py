@@ -18,6 +18,10 @@ AVAZU_CLEAN_PARQUET = PROCESSED_DIR / "avazu_clean.parquet"
 HILLSTROM_CLEAN_PARQUET = PROCESSED_DIR / "hillstrom_clean.parquet"
 CLEANING_SUMMARY = PROCESSED_DIR / "cleaning_summary.json"
 S3_UPLOAD_SUMMARY = PROCESSED_DIR / "s3_upload_summary.json"
+DUCKDB_DEFAULT_PATH = PROCESSED_DIR / "marketing_analytics.duckdb"
+DUCKDB_SETUP_SUMMARY = PROCESSED_DIR / "duckdb_setup_summary.json"
+
+SQL_DIR = PROJECT_ROOT / "sql"
 
 AVAZU_COLUMNS = [
     "id",

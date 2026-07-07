@@ -118,6 +118,21 @@ pytestmark = pytest.mark.docs
                 "athena",
             ],
         ),
+        (
+            "duckdb_setup.md",
+            [
+                "duckdb",
+                "day 6",
+                "raw_avazu_ads",
+                "stg_ad_events",
+                "mart_campaign_kpis",
+                "gitignore",
+                "glue",
+                "lambda",
+                "redshift",
+                "athena",
+            ],
+        ),
     ],
 )
 def test_doc_contains_required_terms(doc_name: str, required_terms: list[str]) -> None:

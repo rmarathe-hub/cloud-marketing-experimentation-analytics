@@ -43,12 +43,13 @@ def test_load_config_reads_env_and_profile(monkeypatch):
     assert config.processed_prefix == "processed"
 
 
-def test_load_config_missing_bucket_raises(monkeypatch):
+def test_load_config_missing_bucket_raises(monkeypatch, tmp_path):
+    env_file = tmp_path / ".env"
+    env_file.write_text("AWS_REGION=us-east-1\n")
     monkeypatch.delenv("S3_BUCKET", raising=False)
-    monkeypatch.setenv("AWS_REGION", "us-east-1")
 
     with pytest.raises(ValueError, match="S3_BUCKET"):
-        uploader.load_config()
+        uploader.load_config(env_path=env_file)
 
 
 def test_load_config_placeholder_bucket_raises(monkeypatch):
@@ -215,10 +216,10 @@ def test_aws_s3_setup_doc_exists_with_security_warnings():
         assert term in content
 
 
-def test_readme_does_not_claim_day5_complete():
+def test_readme_does_not_claim_day6_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
-    assert "AWS S3 setup + upload | ✅ Complete" in readme
-    assert "DuckDB warehouse + validation | 🔲 Pending" in readme
+    assert "DuckDB warehouse setup | ✅ Complete" in readme
+    assert "DuckDB load + validation | 🔲 Pending" in readme
 
 
 def test_upload_script_does_not_contain_secrets():

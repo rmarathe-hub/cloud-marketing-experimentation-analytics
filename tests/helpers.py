@@ -56,6 +56,7 @@ REQUIRED_DOCS = [
     "cost_controls.md",
     "data_quality_report.md",
     "aws_s3_setup.md",
+    "duckdb_setup.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -66,6 +67,7 @@ REQUIRED_SCRIPTS = [
     "clean_avazu_ads.py",
     "clean_hillstrom_email.py",
     "upload_to_s3.py",
+    "create_duckdb_database.py",
 ]
 
 REQUIRED_PACKAGES = [

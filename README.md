@@ -124,6 +124,25 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [project_plan.md](docs/project_plan.md) | Build plan and deliverables |
 | [cost_controls.md](docs/cost_controls.md) | AWS cost-safety rules |
 | [aws_s3_setup.md](docs/aws_s3_setup.md) | S3 bucket, IAM, and upload setup |
+| [duckdb_setup.md](docs/duckdb_setup.md) | Local DuckDB schema and warehouse setup |
+
+---
+
+## DuckDB Warehouse Setup
+
+After configuring `.env` (`DUCKDB_PATH`):
+
+```bash
+python scripts/create_duckdb_database.py
+```
+
+Optional verification:
+
+```bash
+python -c "import duckdb; con=duckdb.connect('data/processed/marketing_analytics.duckdb', read_only=True); print(con.execute('SHOW TABLES').fetchdf()); con.close()"
+```
+
+See [docs/duckdb_setup.md](docs/duckdb_setup.md) for schema layers and next steps. Data load begins in Day 6.
 
 ---
 
@@ -197,7 +216,8 @@ pytest -q
 | Dataset acquisition + profiling | ✅ Complete |
 | Cleaning pipeline | ✅ Complete |
 | AWS S3 setup + upload | ✅ Complete |
-| DuckDB warehouse + validation | 🔲 Pending |
+| DuckDB warehouse setup | ✅ Complete |
+| DuckDB load + validation | 🔲 Pending |
 | Campaign KPI marts | 🔲 Pending |
 | A/B test analysis | 🔲 Pending |
 | CTR forecasting | 🔲 Pending |
