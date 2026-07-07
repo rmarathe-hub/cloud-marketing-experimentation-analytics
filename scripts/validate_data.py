@@ -23,7 +23,11 @@ MART_TABLES = tuple(
     table_name for table_name, layer in EXPECTED_TABLES.items() if layer == "mart"
 )
 
-POPULATED_MART_TABLES = ("mart_campaign_kpis",)
+POPULATED_MART_TABLES = (
+    "mart_campaign_kpis",
+    "mart_ctr_trends",
+    "mart_device_app_performance",
+)
 
 PENDING_MART_TABLES = tuple(
     table_name for table_name in MART_TABLES if table_name not in POPULATED_MART_TABLES
@@ -245,6 +249,154 @@ def validate_campaign_kpi_mart(
     return results
 
 
+def validate_funnel_segment_marts(
+    connection: duckdb.DuckDBPyConnection,
+    expectations: dict[str, Any],
+    tolerance: float = 0.0001,
+) -> list[ValidationResult]:
+    results: list[ValidationResult] = []
+    expected_staging_rows = expectations["cleaning"]["avazu"]["output_rows"]
+    expected_ctr = expectations["cleaning"]["avazu"]["ctr"]
+
+    ctr_trends_count = get_table_row_count(connection, "mart_ctr_trends")
+    ctr_populated = ctr_trends_count > 0
+    results.append(
+        ValidationResult(
+            check_name="mart_ctr_trends_populated",
+            status="pass" if ctr_populated else "fail",
+            expected="> 0",
+            actual=ctr_trends_count,
+            message=(
+                f"mart_ctr_trends has {ctr_trends_count:,} hourly row(s)"
+                if ctr_populated
+                else "mart_ctr_trends is empty; run run_funnel_segment_analysis.py"
+            ),
+        )
+    )
+
+    ctr_trend_impressions = connection.execute(
+        "SELECT COALESCE(SUM(impressions), 0) FROM mart_ctr_trends"
+    ).fetchone()[0]
+    impressions_match = ctr_populated and int(ctr_trend_impressions) == int(expected_staging_rows)
+    results.append(
+        ValidationResult(
+            check_name="mart_ctr_trends_impressions",
+            status="pass" if impressions_match else "fail",
+            expected=expected_staging_rows,
+            actual=int(ctr_trend_impressions),
+            message=(
+                "mart_ctr_trends impressions reconcile with staging rows"
+                if impressions_match
+                else (
+                    "mart_ctr_trends impressions do not reconcile with staging rows"
+                    if ctr_populated
+                    else "mart_ctr_trends impressions unavailable because mart is empty"
+                )
+            ),
+        )
+    )
+
+    actual_ctr = connection.execute(
+        """
+        SELECT CASE
+            WHEN SUM(impressions) = 0 THEN 0.0
+            ELSE SUM(clicks)::DOUBLE / SUM(impressions)::DOUBLE
+        END
+        FROM mart_ctr_trends
+        """
+    ).fetchone()[0]
+    actual_ctr = 0.0 if actual_ctr is None else float(actual_ctr)
+    ctr_passed = ctr_populated and abs(actual_ctr - float(expected_ctr)) <= tolerance
+    results.append(
+        ValidationResult(
+            check_name="mart_ctr_trends_ctr",
+            status="pass" if ctr_passed else "fail",
+            expected=expected_ctr,
+            actual=round(actual_ctr, 6),
+            message=(
+                f"Hourly trend CTR matches cleaning summary ({expected_ctr:.6f})"
+                if ctr_passed
+                else (
+                    f"Hourly trend CTR {actual_ctr:.6f} != expected {expected_ctr:.6f}"
+                    if ctr_populated
+                    else "Hourly trend CTR unavailable because mart is empty"
+                )
+            ),
+        )
+    )
+
+    device_count = get_table_row_count(connection, "mart_device_app_performance")
+    device_populated = device_count > 0
+    results.append(
+        ValidationResult(
+            check_name="mart_device_app_performance_populated",
+            status="pass" if device_populated else "fail",
+            expected="> 0",
+            actual=device_count,
+            message=(
+                f"mart_device_app_performance has {device_count:,} segment row(s)"
+                if device_populated
+                else (
+                    "mart_device_app_performance is empty; "
+                    "run run_funnel_segment_analysis.py"
+                )
+            ),
+        )
+    )
+
+    device_impressions = connection.execute(
+        "SELECT COALESCE(SUM(impressions), 0) FROM mart_device_app_performance"
+    ).fetchone()[0]
+    device_impressions_match = (
+        device_populated and int(device_impressions) == int(expected_staging_rows)
+    )
+    results.append(
+        ValidationResult(
+            check_name="mart_device_app_performance_impressions",
+            status="pass" if device_impressions_match else "fail",
+            expected=expected_staging_rows,
+            actual=int(device_impressions),
+            message=(
+                "mart_device_app_performance impressions reconcile with staging rows"
+                if device_impressions_match
+                else (
+                    "mart_device_app_performance impressions do not reconcile "
+                    "with staging rows"
+                    if device_populated
+                    else (
+                        "mart_device_app_performance impressions unavailable "
+                        "because mart is empty"
+                    )
+                )
+            ),
+        )
+    )
+
+    click_share_sum = connection.execute(
+        "SELECT COALESCE(SUM(click_share), 0.0) FROM mart_device_app_performance"
+    ).fetchone()[0]
+    click_share_sum = 0.0 if click_share_sum is None else float(click_share_sum)
+    share_passed = device_populated and abs(click_share_sum - 1.0) <= tolerance
+    results.append(
+        ValidationResult(
+            check_name="mart_device_app_performance_click_share",
+            status="pass" if share_passed else "fail",
+            expected=1.0,
+            actual=round(click_share_sum, 6),
+            message=(
+                "Segment click_share values sum to 1.0"
+                if share_passed
+                else (
+                    f"Segment click_share sum {click_share_sum:.6f} != 1.0"
+                    if device_populated
+                    else "Segment click_share unavailable because mart is empty"
+                )
+            ),
+        )
+    )
+    return results
+
+
 def validate_treatment_groups(
     connection: duckdb.DuckDBPyConnection,
     expectations: dict[str, Any],
@@ -295,6 +447,7 @@ def run_validation(
         checks.append(validate_hillstrom_visit_rate(connection, expectations))
         checks.append(validate_treatment_groups(connection, expectations))
         checks.extend(validate_campaign_kpi_mart(connection, expectations))
+        checks.extend(validate_funnel_segment_marts(connection, expectations))
         checks.extend(validate_pending_mart_tables_empty(connection))
     finally:
         connection.close()

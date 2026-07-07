@@ -163,6 +163,32 @@ Output (gitignored):
 
 ---
 
+## Day 9: Funnel + segmentation marts
+
+Build hourly CTR trends and device/app/site segment performance:
+
+```bash
+python scripts/run_funnel_segment_analysis.py
+python scripts/validate_data.py
+```
+
+| Source | Target tables |
+|--------|----------------|
+| `stg_ad_events` | `mart_ctr_trends`, `mart_device_app_performance` |
+
+`mart_ctr_trends` aggregates by `event_date` + `event_hour`.
+
+`mart_device_app_performance` aggregates by `device_type`, `app_category`,
+`site_category`, and `banner_pos`, including click share.
+
+Safe to rerun — clears and reloads both marts only.
+
+Output (gitignored):
+
+- `data/processed/funnel_segment_summary.json`
+
+---
+
 ## Next step
 
-Day 8 campaign KPI mart is complete. Proceed to **Day 9: Funnel + segmentation analysis**.
+Day 9 funnel and segmentation marts are complete. Proceed to **Day 10: A/B test analysis**.

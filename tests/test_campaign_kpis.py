@@ -18,6 +18,7 @@ from helpers import (
     DUCKDB_MART_TABLES_POPULATED,
     WEEK1_LOCKED,
     assert_approx_ratio,
+    run_implemented_week2_analytics,
     tiny_avazu_dataframe,
     write_tiny_avazu_csv,
 )
@@ -160,10 +161,7 @@ def test_run_campaign_kpis_summary_schema(tmp_path):
 def test_validation_passes_after_campaign_kpis(tmp_path):
     bundle = _build_tiny_avazu_bundle(tmp_path)
     processed = bundle["processed"]
-    campaign_kpis.run_campaign_kpis(
-        config=bundle["config"],
-        summary_path=processed / "campaign_kpi_summary.json",
-    )
+    run_implemented_week2_analytics(bundle["config"], processed)
 
     expectations = {
         "profile": {"avazu": {"row_count": bundle["staging_rows"]}, "hillstrom": {"row_count": 0}},
@@ -235,4 +233,8 @@ def test_real_campaign_kpi_mart_matches_lock():
 
 
 def test_populated_mart_tables_constant():
-    assert DUCKDB_MART_TABLES_POPULATED == ("mart_campaign_kpis",)
+    assert DUCKDB_MART_TABLES_POPULATED == (
+        "mart_campaign_kpis",
+        "mart_ctr_trends",
+        "mart_device_app_performance",
+    )

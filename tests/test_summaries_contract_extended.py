@@ -91,6 +91,10 @@ def test_validation_summary_contract():
         c for c in payload["checks"] if c["check_name"] == "mart_campaign_kpis_populated"
     )
     assert campaign_populated["status"] == "pass"
+    ctr_trends_populated = next(
+        c for c in payload["checks"] if c["check_name"] == "mart_ctr_trends_populated"
+    )
+    assert ctr_trends_populated["status"] == "pass"
 
 
 @pytest.mark.data

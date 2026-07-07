@@ -101,7 +101,10 @@ WEEK2_ALL_SCRIPTS = [
     "export_dashboard_data.py",
 ]
 
-WEEK2_SCRIPTS_IMPLEMENTED = ("run_campaign_kpis.py",)
+WEEK2_SCRIPTS_IMPLEMENTED = (
+    "run_campaign_kpis.py",
+    "run_funnel_segment_analysis.py",
+)
 
 WEEK2_SCRIPTS_PENDING = tuple(
     script for script in WEEK2_ALL_SCRIPTS if script not in WEEK2_SCRIPTS_IMPLEMENTED
@@ -121,7 +124,11 @@ DUCKDB_MART_TABLES = (
     "mart_forecast_results",
 )
 
-DUCKDB_MART_TABLES_POPULATED = ("mart_campaign_kpis",)
+DUCKDB_MART_TABLES_POPULATED = (
+    "mart_campaign_kpis",
+    "mart_ctr_trends",
+    "mart_device_app_performance",
+)
 
 DUCKDB_MART_TABLES_PENDING = tuple(
     table for table in DUCKDB_MART_TABLES if table not in DUCKDB_MART_TABLES_POPULATED
@@ -166,7 +173,7 @@ WEEK1_LOCKED = {
     "mens_email_recipients": 21_307,
     "womens_email_recipients": 21_387,
     "duckdb_table_count": 10,
-    "validation_check_count": 14,
+    "validation_check_count": 18,
     "s3_upload_count": 4,
     "avazu_device_id_unique": 41_413,
     "avazu_app_id_unique": 1_641,
@@ -286,6 +293,7 @@ PATH_CONSTANTS = [
     "DUCKDB_LOAD_SUMMARY",
     "DATA_VALIDATION_SUMMARY",
     "CAMPAIGN_KPI_SUMMARY",
+    "FUNNEL_SEGMENT_SUMMARY",
     "WEEK1_DATA_LOCK_DOC",
     "SQL_DIR",
 ]
@@ -564,6 +572,21 @@ def production_validation_summary_available() -> bool:
         return False
     payload = load_json(DATA_VALIDATION_SUMMARY)
     return payload.get("success") is True and payload.get("passed_count", 0) >= WEEK1_LOCKED["validation_check_count"]
+
+
+def run_implemented_week2_analytics(config, processed_dir: Path) -> None:
+    """Run all implemented Week 2 analytics scripts (for validation integration tests)."""
+    import run_campaign_kpis as campaign_kpis
+    import run_funnel_segment_analysis as funnel_segment
+
+    campaign_kpis.run_campaign_kpis(
+        config=config,
+        summary_path=processed_dir / "campaign_kpi_summary.json",
+    )
+    funnel_segment.run_funnel_segment_analysis(
+        config=config,
+        summary_path=processed_dir / "funnel_segment_summary.json",
+    )
 
 
 def assert_no_secret_patterns(text: str, source: str = "content") -> None:

@@ -220,6 +220,7 @@ def test_readme_does_not_claim_week2_marts_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "DuckDB load + validation | ✅ Complete" in readme
     assert "Campaign KPI marts | ✅ Complete" in readme
+    assert "Funnel + segment analysis | ✅ Complete" in readme
     assert "A/B test analysis | 🔲 Pending" in readme
 
 

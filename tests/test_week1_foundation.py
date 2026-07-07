@@ -12,8 +12,8 @@ import pytest
 import create_duckdb_database as db_setup
 import generate_week1_data_lock as week1_lock
 import load_to_duckdb as loader
-import run_campaign_kpis as campaign_kpis
 import validate_data as validator
+from helpers import run_implemented_week2_analytics
 from clean_avazu_ads import clean_avazu_ads
 from clean_hillstrom_email import clean_hillstrom_email
 from cleaning_utils import merge_cleaning_summary
@@ -93,14 +93,16 @@ def test_week2_pending_scripts_do_not_exist():
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 
 
-def test_week2_day8_campaign_kpi_script_exists():
+def test_week2_day9_funnel_segment_script_exists():
     assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "run_funnel_segment_analysis.py").exists()
 
 
 def test_readme_marks_week1_lock_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "Week 1 tests + docs lock | ✅ Complete" in readme
     assert "Campaign KPI marts | ✅ Complete" in readme
+    assert "Funnel + segment analysis | ✅ Complete" in readme
 
 
 def _build_week1_summaries(tmp_path: Path) -> dict[str, Path]:
@@ -251,11 +253,7 @@ def test_week1_end_to_end_smoke_on_tiny_data(tmp_path: Path):
     )
     assert load_summary["success"] is True
 
-    campaign_summary = campaign_kpis.run_campaign_kpis(
-        config=config,
-        summary_path=processed_dir / "campaign_kpi_summary.json",
-    )
-    assert campaign_summary["success"] is True
+    run_implemented_week2_analytics(config, processed_dir)
 
     validation_summary = validator.run_validation(
         config=config,
