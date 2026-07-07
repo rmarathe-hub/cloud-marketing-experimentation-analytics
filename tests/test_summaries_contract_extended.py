@@ -87,6 +87,10 @@ def test_validation_summary_contract():
     assert "stg_email_experiment_visit_rate" in check_names
     for mart_check in [c for c in payload["checks"] if c["check_name"].endswith("_empty")]:
         assert mart_check["status"] == "pass"
+    campaign_populated = next(
+        c for c in payload["checks"] if c["check_name"] == "mart_campaign_kpis_populated"
+    )
+    assert campaign_populated["status"] == "pass"
 
 
 @pytest.mark.data

@@ -11,6 +11,7 @@ import pytest
 
 import create_duckdb_database as db_setup
 import load_to_duckdb as loader
+import run_campaign_kpis as campaign_kpis
 import validate_data as validator
 from clean_avazu_ads import clean_avazu_ads
 from clean_hillstrom_email import clean_hillstrom_email
@@ -124,6 +125,11 @@ def test_load_and_validate_tiny_pipeline(tmp_path):
     assert load_summary["success"] is True
     assert load_summary["loaded_table_count"] == 4
 
+    campaign_kpis.run_campaign_kpis(
+        config=config,
+        summary_path=tmp_path / "campaign_kpi_summary.json",
+    )
+
     expectations = validator.load_expectations(
         profile_path=bundle["profile_path"],
         cleaning_path=bundle["cleaning_path"],
@@ -173,7 +179,7 @@ def test_mart_tables_remain_empty_after_load(tmp_path):
 
     connection = duckdb.connect(str(bundle["db_path"]), read_only=True)
     try:
-        for table_name in validator.MART_TABLES:
+        for table_name in validator.PENDING_MART_TABLES:
             count = connection.execute(f"SELECT COUNT(*) FROM {table_name}").fetchone()[0]
             assert count == 0
     finally:
@@ -209,16 +215,18 @@ def test_validation_summary_schema(tmp_path):
     assert all("check_name" in check for check in summary["checks"])
 
 
-def test_readme_marks_day6_complete_not_week2():
+def test_readme_marks_day8_campaign_kpis_complete_not_full_week2():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "DuckDB load + validation | ✅ Complete" in readme
-    assert "Campaign KPI marts | 🔲 Pending" in readme
+    assert "Campaign KPI marts | ✅ Complete" in readme
+    assert "A/B test analysis | 🔲 Pending" in readme
 
 
 def test_validate_script_exists_load_script_exists():
     assert (PROJECT_ROOT / "scripts" / "load_to_duckdb.py").exists()
     assert (PROJECT_ROOT / "scripts" / "validate_data.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
+    assert not (PROJECT_ROOT / "scripts" / "run_funnel_segment_analysis.py").exists()
 
 
 def test_duckdb_setup_doc_mentions_day6_load():

@@ -12,6 +12,7 @@ import pytest
 import create_duckdb_database as db_setup
 import generate_week1_data_lock as week1_lock
 import load_to_duckdb as loader
+import run_campaign_kpis as campaign_kpis
 import validate_data as validator
 from clean_avazu_ads import clean_avazu_ads
 from clean_hillstrom_email import clean_hillstrom_email
@@ -85,22 +86,21 @@ def test_week1_required_scripts_exist():
     assert REQUIRED_SCRIPTS  # sanity: helpers list is non-empty
 
 
-def test_week1_scripts_do_not_include_week2_analytics():
-    week2_scripts = [
-        "run_campaign_kpis.py",
-        "run_funnel_segment_analysis.py",
-        "run_ab_test_analysis.py",
-        "run_ctr_forecast.py",
-        "export_dashboard_data.py",
-    ]
-    for script_name in week2_scripts:
+def test_week2_pending_scripts_do_not_exist():
+    from helpers import WEEK2_SCRIPTS_PENDING
+
+    for script_name in WEEK2_SCRIPTS_PENDING:
         assert not (PROJECT_ROOT / "scripts" / script_name).exists()
+
+
+def test_week2_day8_campaign_kpi_script_exists():
+    assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
 
 
 def test_readme_marks_week1_lock_complete():
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "Week 1 tests + docs lock | ✅ Complete" in readme
-    assert "Campaign KPI marts | 🔲 Pending" in readme
+    assert "Campaign KPI marts | ✅ Complete" in readme
 
 
 def _build_week1_summaries(tmp_path: Path) -> dict[str, Path]:
@@ -251,6 +251,12 @@ def test_week1_end_to_end_smoke_on_tiny_data(tmp_path: Path):
     )
     assert load_summary["success"] is True
 
+    campaign_summary = campaign_kpis.run_campaign_kpis(
+        config=config,
+        summary_path=processed_dir / "campaign_kpi_summary.json",
+    )
+    assert campaign_summary["success"] is True
+
     validation_summary = validator.run_validation(
         config=config,
         expectations=validator.load_expectations(
@@ -266,7 +272,7 @@ def test_week1_end_to_end_smoke_on_tiny_data(tmp_path: Path):
         mart_count = connection.execute(
             "SELECT COUNT(*) FROM mart_campaign_kpis"
         ).fetchone()[0]
-        assert mart_count == 0
+        assert mart_count > 0
     finally:
         connection.close()
 

@@ -23,6 +23,12 @@ MART_TABLES = tuple(
     table_name for table_name, layer in EXPECTED_TABLES.items() if layer == "mart"
 )
 
+POPULATED_MART_TABLES = ("mart_campaign_kpis",)
+
+PENDING_MART_TABLES = tuple(
+    table_name for table_name in MART_TABLES if table_name not in POPULATED_MART_TABLES
+)
+
 LOADED_TABLES = {
     "raw_avazu_ads": {
         "profile_key": None,
@@ -162,11 +168,11 @@ def validate_hillstrom_visit_rate(
     )
 
 
-def validate_mart_tables_empty(
+def validate_pending_mart_tables_empty(
     connection: duckdb.DuckDBPyConnection,
 ) -> list[ValidationResult]:
     results: list[ValidationResult] = []
-    for table_name in MART_TABLES:
+    for table_name in PENDING_MART_TABLES:
         actual = get_table_row_count(connection, table_name)
         passed = actual == 0
         results.append(
@@ -176,12 +182,66 @@ def validate_mart_tables_empty(
                 expected=0,
                 actual=actual,
                 message=(
-                    f"{table_name} remains empty before analytics marts"
+                    f"{table_name} remains empty before its analytics script runs"
                     if passed
                     else f"{table_name} should be empty but has {actual:,} rows"
                 ),
             )
         )
+    return results
+
+
+def validate_campaign_kpi_mart(
+    connection: duckdb.DuckDBPyConnection,
+    expectations: dict[str, Any],
+    tolerance: float = 0.0001,
+) -> list[ValidationResult]:
+    results: list[ValidationResult] = []
+    row_count = get_table_row_count(connection, "mart_campaign_kpis")
+    populated = row_count > 0
+    results.append(
+        ValidationResult(
+            check_name="mart_campaign_kpis_populated",
+            status="pass" if populated else "fail",
+            expected="> 0",
+            actual=row_count,
+            message=(
+                f"mart_campaign_kpis has {row_count:,} daily KPI row(s)"
+                if populated
+                else "mart_campaign_kpis is empty; run run_campaign_kpis.py"
+            ),
+        )
+    )
+
+    expected_ctr = expectations["cleaning"]["avazu"]["ctr"]
+    actual_ctr = connection.execute(
+        """
+        SELECT CASE
+            WHEN SUM(impressions) = 0 THEN 0.0
+            ELSE SUM(clicks)::DOUBLE / SUM(impressions)::DOUBLE
+        END
+        FROM mart_campaign_kpis
+        """
+    ).fetchone()[0]
+    actual_ctr = 0.0 if actual_ctr is None else float(actual_ctr)
+    ctr_passed = populated and abs(actual_ctr - float(expected_ctr)) <= tolerance
+    results.append(
+        ValidationResult(
+            check_name="mart_campaign_kpis_ctr",
+            status="pass" if ctr_passed else "fail",
+            expected=expected_ctr,
+            actual=round(actual_ctr, 6),
+            message=(
+                f"Campaign KPI CTR matches cleaning summary ({expected_ctr:.6f})"
+                if ctr_passed
+                else (
+                    f"Campaign KPI CTR {actual_ctr:.6f} != expected {expected_ctr:.6f}"
+                    if populated
+                    else "Campaign KPI CTR unavailable because mart is empty"
+                )
+            ),
+        )
+    )
     return results
 
 
@@ -234,7 +294,8 @@ def run_validation(
         checks.append(validate_avazu_ctr(connection, expectations))
         checks.append(validate_hillstrom_visit_rate(connection, expectations))
         checks.append(validate_treatment_groups(connection, expectations))
-        checks.extend(validate_mart_tables_empty(connection))
+        checks.extend(validate_campaign_kpi_mart(connection, expectations))
+        checks.extend(validate_pending_mart_tables_empty(connection))
     finally:
         connection.close()
 

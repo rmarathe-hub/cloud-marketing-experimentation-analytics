@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from helpers import DOCS_DIR, PROJECT_ROOT, read_text
+from helpers import DOCS_DIR, PROJECT_ROOT, WEEK2_SCRIPTS_PENDING, read_text
 
 pytestmark = [pytest.mark.docs, pytest.mark.unit]
 
@@ -15,7 +15,6 @@ README = read_text(PROJECT_ROOT / "README.md")
 @pytest.mark.parametrize(
     "phrase",
     [
-        "Campaign KPI marts | ✅ Complete",
         "A/B test analysis | ✅ Complete",
         "CTR forecasting | ✅ Complete",
         "Tableau dashboard | ✅ Complete",
@@ -25,6 +24,10 @@ README = read_text(PROJECT_ROOT / "README.md")
 )
 def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
     assert phrase not in README
+
+
+def test_readme_marks_campaign_kpi_marts_complete() -> None:
+    assert "Campaign KPI marts | ✅ Complete" in README
 
 
 def test_readme_marks_s3_upload_complete() -> None:
@@ -57,11 +60,13 @@ def test_upload_script_exists() -> None:
     assert (PROJECT_ROOT / "scripts" / "upload_to_s3.py").exists()
 
 
-def test_duckdb_pipeline_scripts_exist_without_week2_analytics() -> None:
+def test_duckdb_pipeline_scripts_exist_with_day8_campaign_kpis_only() -> None:
     assert (PROJECT_ROOT / "scripts" / "create_duckdb_database.py").exists()
     assert (PROJECT_ROOT / "scripts" / "load_to_duckdb.py").exists()
     assert (PROJECT_ROOT / "scripts" / "validate_data.py").exists()
-    assert not (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "run_campaign_kpis.py").exists()
+    for script_name in WEEK2_SCRIPTS_PENDING:
+        assert not (PROJECT_ROOT / "scripts" / script_name).exists()
 
 
 def test_project_plan_mentions_day4_as_next_cloud_step() -> None:

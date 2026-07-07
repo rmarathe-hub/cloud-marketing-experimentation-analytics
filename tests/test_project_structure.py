@@ -63,7 +63,8 @@ def test_readme_status_shows_days_1_to_6_complete() -> None:
 def test_readme_status_shows_week1_complete() -> None:
     readme = read_text(PROJECT_ROOT / "README.md")
     assert "Week 1 tests + docs lock | ✅ Complete" in readme
-    assert "Campaign KPI marts | 🔲 Pending" in readme
+    assert "Campaign KPI marts | ✅ Complete" in readme
+    assert "A/B test analysis | 🔲 Pending" in readme
 
 
 def test_readme_business_question_present() -> None:

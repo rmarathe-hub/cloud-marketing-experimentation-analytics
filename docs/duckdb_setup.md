@@ -117,12 +117,40 @@ Validation checks:
 - Row counts vs `raw_profile_summary.json` and `cleaning_summary.json`
 - Avazu CTR and Hillstrom visit rate vs cleaning summaries
 - Hillstrom treatment group counts
-- Mart tables remain empty (analytics marts are Week 2)
+- `mart_campaign_kpis` populated with daily CTR after Day 8
+- Remaining mart tables empty until their analytics scripts run
 
 Outputs (gitignored):
 
 - `data/processed/duckdb_load_summary.json`
 - `data/processed/data_validation_summary.json`
+
+---
+
+## Day 8: Campaign KPI mart
+
+Build daily campaign KPIs from staging ad events:
+
+```bash
+python scripts/run_campaign_kpis.py
+python scripts/validate_data.py
+```
+
+| Source | Target table |
+|--------|----------------|
+| `stg_ad_events` | `mart_campaign_kpis` |
+
+The script aggregates by `event_date`:
+
+- **Impressions** = `COUNT(*)`
+- **Clicks** = `SUM(click)`
+- **CTR** = clicks / impressions
+
+Safe to rerun — clears and reloads `mart_campaign_kpis` only.
+
+Output (gitignored):
+
+- `data/processed/campaign_kpi_summary.json`
 
 ---
 
@@ -137,4 +165,4 @@ Outputs (gitignored):
 
 ## Next step
 
-Week 1 is complete. Proceed to **Week 2: Campaign KPI marts** (Day 8).
+Day 8 campaign KPI mart is complete. Proceed to **Day 9: Funnel + segmentation analysis**.

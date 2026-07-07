@@ -93,13 +93,22 @@ SQL_SCHEMA_FILES = [
     "03_mart_tables.sql",
 ]
 
-WEEK2_SCRIPTS = [
+WEEK2_ALL_SCRIPTS = [
     "run_campaign_kpis.py",
     "run_funnel_segment_analysis.py",
     "run_ab_test_analysis.py",
     "run_ctr_forecast.py",
     "export_dashboard_data.py",
 ]
+
+WEEK2_SCRIPTS_IMPLEMENTED = ("run_campaign_kpis.py",)
+
+WEEK2_SCRIPTS_PENDING = tuple(
+    script for script in WEEK2_ALL_SCRIPTS if script not in WEEK2_SCRIPTS_IMPLEMENTED
+)
+
+# Backward-compatible alias used by older tests.
+WEEK2_SCRIPTS = WEEK2_SCRIPTS_PENDING
 
 DUCKDB_RAW_TABLES = ("raw_avazu_ads", "raw_hillstrom_email")
 DUCKDB_STAGING_TABLES = ("stg_ad_events", "stg_email_experiment")
@@ -110,6 +119,12 @@ DUCKDB_MART_TABLES = (
     "mart_ab_test_results",
     "mart_forecast_inputs",
     "mart_forecast_results",
+)
+
+DUCKDB_MART_TABLES_POPULATED = ("mart_campaign_kpis",)
+
+DUCKDB_MART_TABLES_PENDING = tuple(
+    table for table in DUCKDB_MART_TABLES if table not in DUCKDB_MART_TABLES_POPULATED
 )
 DUCKDB_ALL_TABLES = DUCKDB_RAW_TABLES + DUCKDB_STAGING_TABLES + DUCKDB_MART_TABLES
 
@@ -151,7 +166,7 @@ WEEK1_LOCKED = {
     "mens_email_recipients": 21_307,
     "womens_email_recipients": 21_387,
     "duckdb_table_count": 10,
-    "validation_check_count": 13,
+    "validation_check_count": 14,
     "s3_upload_count": 4,
     "avazu_device_id_unique": 41_413,
     "avazu_app_id_unique": 1_641,
@@ -234,7 +249,6 @@ TRACKED_FORBIDDEN_PATTERNS = [
 ]
 
 README_FORBIDDEN_COMPLETE_PHRASES = [
-    "Campaign KPI marts | ✅ Complete",
     "A/B test analysis | ✅ Complete",
     "CTR forecasting | ✅ Complete",
     "Tableau dashboard | ✅ Complete",
@@ -271,13 +285,14 @@ PATH_CONSTANTS = [
     "DUCKDB_SETUP_SUMMARY",
     "DUCKDB_LOAD_SUMMARY",
     "DATA_VALIDATION_SUMMARY",
+    "CAMPAIGN_KPI_SUMMARY",
     "WEEK1_DATA_LOCK_DOC",
     "SQL_DIR",
 ]
 
 SCRIPTS_WITH_MAIN = [
     name for name in REQUIRED_SCRIPTS if name not in {"paths.py", "cleaning_utils.py"}
-]
+] + list(WEEK2_SCRIPTS_IMPLEMENTED)
 
 SCRIPTS_HELPER_ONLY = ["paths.py", "cleaning_utils.py"]
 
@@ -548,7 +563,7 @@ def production_validation_summary_available() -> bool:
     if not DATA_VALIDATION_SUMMARY.exists():
         return False
     payload = load_json(DATA_VALIDATION_SUMMARY)
-    return payload.get("success") is True and payload.get("passed_count", 0) >= 10
+    return payload.get("success") is True and payload.get("passed_count", 0) >= WEEK1_LOCKED["validation_check_count"]
 
 
 def assert_no_secret_patterns(text: str, source: str = "content") -> None:

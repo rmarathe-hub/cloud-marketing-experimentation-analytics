@@ -7,7 +7,8 @@ import pytest
 
 from helpers import (
     DUCKDB_ALL_TABLES,
-    DUCKDB_MART_TABLES,
+    DUCKDB_MART_TABLES_PENDING,
+    DUCKDB_MART_TABLES_POPULATED,
     HILLSTROM_CLEAN_GROUPS,
     WEEK1_LOCKED,
     assert_approx_ratio,
@@ -53,10 +54,18 @@ def test_loaded_table_row_counts(duckdb_connection, table_name: str, expected_ro
     assert actual == expected_rows
 
 
-@pytest.mark.parametrize("mart_table", DUCKDB_MART_TABLES)
-def test_mart_tables_empty(duckdb_connection, mart_table: str):
+@pytest.mark.parametrize("mart_table", DUCKDB_MART_TABLES_PENDING)
+def test_pending_mart_tables_empty(duckdb_connection, mart_table: str):
     actual = duckdb_connection.execute(f"SELECT COUNT(*) FROM {mart_table}").fetchone()[0]
     assert actual == 0
+
+
+@pytest.mark.parametrize("mart_table", DUCKDB_MART_TABLES_POPULATED)
+def test_populated_mart_tables_have_rows(duckdb_connection, mart_table: str):
+    actual = duckdb_connection.execute(f"SELECT COUNT(*) FROM {mart_table}").fetchone()[0]
+    if actual == 0:
+        pytest.skip(f"{mart_table} not populated; run run_campaign_kpis.py")
+    assert actual > 0
 
 
 def test_staging_avazu_ctr_matches_lock(duckdb_connection):

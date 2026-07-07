@@ -38,6 +38,7 @@ def test_path_constant_inside_project_root(attr_name: str) -> None:
         ("DUCKDB_DEFAULT_PATH", "marketing_analytics.duckdb"),
         ("DUCKDB_LOAD_SUMMARY", "duckdb_load_summary.json"),
         ("DATA_VALIDATION_SUMMARY", "data_validation_summary.json"),
+        ("CAMPAIGN_KPI_SUMMARY", "campaign_kpi_summary.json"),
         ("WEEK1_DATA_LOCK_DOC", "week1_data_lock.md"),
     ],
 )

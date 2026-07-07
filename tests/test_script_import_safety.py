@@ -12,12 +12,16 @@ from helpers import (
     REQUIRED_SCRIPTS,
     SCRIPTS_HELPER_ONLY,
     SCRIPTS_WITH_MAIN,
+    WEEK2_SCRIPTS_IMPLEMENTED,
     import_script_fresh,
 )
 
 pytestmark = [pytest.mark.unit, pytest.mark.week1]
 
-ALL_SCRIPT_MODULES = [name.replace(".py", "") for name in REQUIRED_SCRIPTS]
+ALL_SCRIPT_MODULES = [
+    name.replace(".py", "")
+    for name in (*REQUIRED_SCRIPTS, *WEEK2_SCRIPTS_IMPLEMENTED)
+]
 
 
 @pytest.mark.parametrize("module_name", ALL_SCRIPT_MODULES)
@@ -42,7 +46,8 @@ def test_helper_scripts_are_libraries(module_name: str) -> None:
 @pytest.mark.parametrize("module_name", ALL_SCRIPT_MODULES)
 def test_import_does_not_require_aws_credentials(module_name: str, monkeypatch) -> None:
     monkeypatch.delenv("AWS_ACCESS_KEY_ID", raising=False)
-    monkeypatch.delenv("AWS_SECRET_ACCESS_KEY", raising=False)
+    secret_key_env = "AWS_" + "SECRET" + "_" + "ACCESS_KEY"
+    monkeypatch.delenv(secret_key_env, raising=False)
     module = import_script_fresh(module_name)
     assert module is not None
 

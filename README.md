@@ -253,9 +253,9 @@ python scripts/upload_to_s3.py
 python scripts/create_duckdb_database.py
 python scripts/load_to_duckdb.py
 python scripts/validate_data.py
-
-# Week 2 — analytics
 python scripts/run_campaign_kpis.py
+
+# Week 2 — remaining analytics
 python scripts/run_funnel_segment_analysis.py
 python scripts/run_ab_test_analysis.py
 python scripts/run_ctr_forecast.py
@@ -278,7 +278,7 @@ pytest -q
 | DuckDB warehouse setup | ✅ Complete |
 | DuckDB load + validation | ✅ Complete |
 | Week 1 tests + docs lock | ✅ Complete |
-| Campaign KPI marts | 🔲 Pending |
+| Campaign KPI marts | ✅ Complete |
 | A/B test analysis | 🔲 Pending |
 | CTR forecasting | 🔲 Pending |
 | Tableau dashboard | 🔲 Pending |
