@@ -1,7 +1,7 @@
 # Week 1 Data Lock
 
 **Status:** Locked  
-**Generated:** 2026-07-07T05:01:06.220716+00:00  
+**Generated:** 2026-07-07T18:03:15.333596+00:00  
 **Scope:** Days 1–6 data foundation (no analytics marts)
 
 This document freezes the verified Week 1 dataset statistics and pipeline outputs. Do not change locked values in downstream docs without re-running the full Week 1 pipeline and regenerating this file.

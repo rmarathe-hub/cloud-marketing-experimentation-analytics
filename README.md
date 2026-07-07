@@ -257,6 +257,8 @@ python scripts/run_campaign_kpis.py
 python scripts/run_funnel_segment_analysis.py
 python scripts/run_ab_test_analysis.py
 python scripts/run_ctr_forecast.py
+python scripts/generate_recommendations.py
+python scripts/validate_data.py
 
 # Week 2 — exports
 python scripts/export_dashboard_data.py
@@ -282,6 +284,7 @@ pytest -q
 | Funnel + segment analysis | ✅ Complete |
 | A/B test analysis | ✅ Complete |
 | CTR forecasting | ✅ Complete |
+| Recommendations + executive summary | ✅ Complete |
 | Tableau dashboard | 🔲 Pending |
 | Excel stakeholder workbook | 🔲 Pending |
 | Final README case study | 🔲 Pending |

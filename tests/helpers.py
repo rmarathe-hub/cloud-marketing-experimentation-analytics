@@ -58,6 +58,10 @@ REQUIRED_DOCS = [
     "aws_s3_setup.md",
     "duckdb_setup.md",
     "week1_data_lock.md",
+    "ab_test_methodology.md",
+    "forecast_methodology.md",
+    "recommendations.md",
+    "executive_summary.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -98,6 +102,7 @@ WEEK2_ALL_SCRIPTS = [
     "run_funnel_segment_analysis.py",
     "run_ab_test_analysis.py",
     "run_ctr_forecast.py",
+    "generate_recommendations.py",
     "export_dashboard_data.py",
 ]
 
@@ -106,6 +111,7 @@ WEEK2_SCRIPTS_IMPLEMENTED = (
     "run_funnel_segment_analysis.py",
     "run_ab_test_analysis.py",
     "run_ctr_forecast.py",
+    "generate_recommendations.py",
 )
 
 WEEK2_SCRIPTS_PENDING = tuple(
@@ -290,6 +296,9 @@ PATH_CONSTANTS = [
     "FUNNEL_SEGMENT_SUMMARY",
     "AB_TEST_SUMMARY",
     "FORECAST_SUMMARY",
+    "RECOMMENDATIONS_SUMMARY",
+    "RECOMMENDATIONS_DOC",
+    "EXECUTIVE_SUMMARY_DOC",
     "WEEK1_DATA_LOCK_DOC",
     "SQL_DIR",
 ]

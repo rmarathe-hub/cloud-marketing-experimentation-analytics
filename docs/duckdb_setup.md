@@ -237,7 +237,25 @@ Output (gitignored):
 
 ---
 
+## Day 12: Recommendations + executive summary
+
+Synthesize scale / pause / retest actions from populated marts:
+
+```bash
+python scripts/generate_recommendations.py
+```
+
+| Source marts | Output |
+|--------------|--------|
+| `mart_campaign_kpis`, `mart_device_app_performance`, `mart_ctr_trends`, `mart_ab_test_results`, `mart_forecast_results` | `docs/recommendations.md`, `docs/executive_summary.md` |
+
+Output (gitignored):
+
+- `data/processed/recommendations_summary.json`
+
+---
+
 ## Next step
 
-Day 11 CTR forecasting is complete. All six mart tables are now populated.
-Proceed to **Day 12: recommendations + executive summary**, then **Day 13 exports**.
+Day 12 recommendations and executive summary are complete.
+Proceed to **Day 13: export dashboard data** (`export_dashboard_data.py`).

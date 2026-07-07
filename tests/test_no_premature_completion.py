@@ -24,8 +24,8 @@ def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
     assert phrase not in README
 
 
-def test_readme_marks_ctr_forecasting_complete() -> None:
-    assert "CTR forecasting | ✅ Complete" in README
+def test_readme_marks_recommendations_complete() -> None:
+    assert "Recommendations + executive summary | ✅ Complete" in README
 
 
 def test_readme_marks_ab_test_analysis_complete() -> None:
