@@ -10,6 +10,7 @@ from helpers import (
     PLACEHOLDER_ENV_VALUES,
     PROJECT_ROOT,
     SECRET_PATTERNS,
+    SECRET_PATTERN_SCAN_EXEMPT,
     git_tracked_files,
     read_text,
 )
@@ -71,6 +72,8 @@ def test_env_example_has_placeholders_only() -> None:
 
 @pytest.mark.parametrize("tracked_file", TRACKED)
 def test_tracked_files_do_not_contain_secret_patterns(tracked_file: str) -> None:
+    if tracked_file in SECRET_PATTERN_SCAN_EXEMPT:
+        pytest.skip("File intentionally references secret pattern names for detection")
     path = PROJECT_ROOT / tracked_file
     if not path.is_file() or path.suffix not in {".py", ".md", ".txt", ".example", ".ini", ""}:
         pytest.skip("Non-text tracked file")

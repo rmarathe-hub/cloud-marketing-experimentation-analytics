@@ -17,6 +17,7 @@ RAW_PROFILE_SUMMARY = PROCESSED_DIR / "raw_profile_summary.json"
 AVAZU_CLEAN_PARQUET = PROCESSED_DIR / "avazu_clean.parquet"
 HILLSTROM_CLEAN_PARQUET = PROCESSED_DIR / "hillstrom_clean.parquet"
 CLEANING_SUMMARY = PROCESSED_DIR / "cleaning_summary.json"
+S3_UPLOAD_SUMMARY = PROCESSED_DIR / "s3_upload_summary.json"
 
 AVAZU_COLUMNS = [
     "id",

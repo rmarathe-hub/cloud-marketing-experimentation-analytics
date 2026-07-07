@@ -55,6 +55,7 @@ REQUIRED_DOCS = [
     "project_plan.md",
     "cost_controls.md",
     "data_quality_report.md",
+    "aws_s3_setup.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -64,6 +65,7 @@ REQUIRED_SCRIPTS = [
     "cleaning_utils.py",
     "clean_avazu_ads.py",
     "clean_hillstrom_email.py",
+    "upload_to_s3.py",
 ]
 
 REQUIRED_PACKAGES = [
@@ -87,6 +89,14 @@ SECRET_PATTERNS = [
     "github_pat_",
     "kaggle.json",
 ]
+
+# Files that intentionally reference secret pattern names for detection tests.
+SECRET_PATTERN_SCAN_EXEMPT = {
+    "tests/helpers.py",
+    "tests/test_git_hygiene.py",
+    "tests/test_script_imports.py",
+    "tests/test_upload_to_s3.py",
+}
 
 PLACEHOLDER_ENV_VALUES = {
     "your-bucket-name",

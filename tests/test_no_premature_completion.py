@@ -15,7 +15,6 @@ README = read_text(PROJECT_ROOT / "README.md")
 @pytest.mark.parametrize(
     "phrase",
     [
-        "AWS S3 setup + upload | ✅ Complete",
         "DuckDB warehouse + validation | ✅ Complete",
         "Campaign KPI marts | ✅ Complete",
         "A/B test analysis | ✅ Complete",
@@ -29,13 +28,17 @@ def test_readme_does_not_mark_future_phases_complete(phrase: str) -> None:
     assert phrase not in README
 
 
+def test_readme_marks_s3_upload_complete() -> None:
+    assert "AWS S3 setup + upload | ✅ Complete" in README
+
+
 def test_sql_directory_has_no_completed_analytics_sql_yet() -> None:
     sql_files = list((PROJECT_ROOT / "sql").glob("*.sql"))
     assert sql_files == []
 
 
 def test_no_upload_script_implemented_yet() -> None:
-    assert not (PROJECT_ROOT / "scripts" / "upload_to_s3.py").exists()
+    assert (PROJECT_ROOT / "scripts" / "upload_to_s3.py").exists()
 
 
 def test_no_duckdb_load_scripts_yet() -> None:

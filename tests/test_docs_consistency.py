@@ -103,6 +103,21 @@ pytestmark = pytest.mark.docs
                 "credentials",
             ],
         ),
+        (
+            "aws_s3_setup.md",
+            [
+                "block public access",
+                "never commit",
+                "marketing-analytics",
+                "least-privilege",
+                "budget",
+                "glue",
+                "lambda",
+                "ec2",
+                "redshift",
+                "athena",
+            ],
+        ),
     ],
 )
 def test_doc_contains_required_terms(doc_name: str, required_terms: list[str]) -> None:

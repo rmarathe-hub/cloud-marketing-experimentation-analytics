@@ -123,6 +123,25 @@ See [docs/metric_definitions.md](docs/metric_definitions.md) for full definition
 | [data_dictionary.md](docs/data_dictionary.md) | Source and mart column reference |
 | [project_plan.md](docs/project_plan.md) | Build plan and deliverables |
 | [cost_controls.md](docs/cost_controls.md) | AWS cost-safety rules |
+| [aws_s3_setup.md](docs/aws_s3_setup.md) | S3 bucket, IAM, and upload setup |
+
+---
+
+## AWS S3 Upload
+
+After configuring `.env` and AWS CLI (`marketing-analytics` profile):
+
+```bash
+python scripts/upload_to_s3.py
+```
+
+Verify objects in the bucket:
+
+```bash
+aws s3 ls s3://$S3_BUCKET/ --recursive --profile marketing-analytics
+```
+
+See [docs/aws_s3_setup.md](docs/aws_s3_setup.md) for full setup instructions.
 
 ---
 
@@ -177,7 +196,7 @@ pytest -q
 | Repo scaffold + business framing | ✅ Complete |
 | Dataset acquisition + profiling | ✅ Complete |
 | Cleaning pipeline | ✅ Complete |
-| AWS S3 setup + upload | 🔲 Pending |
+| AWS S3 setup + upload | ✅ Complete |
 | DuckDB warehouse + validation | 🔲 Pending |
 | Campaign KPI marts | 🔲 Pending |
 | A/B test analysis | 🔲 Pending |
