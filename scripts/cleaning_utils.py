@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from paths import CLEANING_SUMMARY, PROCESSED_DIR
+from paths import CLEANING_SUMMARY
 
 UNKNOWN_STRINGS = {"", "nan", "null", "none", "unknown", "-1"}
 
@@ -23,17 +24,22 @@ def is_unknown_numeric(series: pd.Series) -> pd.Series:
     return series.isna() | (numeric == -1)
 
 
-def merge_cleaning_summary(dataset_name: str, dataset_summary: dict[str, Any]) -> dict[str, Any]:
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+def merge_cleaning_summary(
+    dataset_name: str,
+    dataset_summary: dict[str, Any],
+    summary_path: Path | None = None,
+) -> dict[str, Any]:
+    path = summary_path or CLEANING_SUMMARY
+    path.parent.mkdir(parents=True, exist_ok=True)
 
-    if CLEANING_SUMMARY.exists():
-        summary = json.loads(CLEANING_SUMMARY.read_text())
+    if path.exists():
+        summary = json.loads(path.read_text())
     else:
         summary = {"generated_at": None, "datasets": {}}
 
     summary["generated_at"] = datetime.now(timezone.utc).isoformat()
     summary["datasets"][dataset_name] = dataset_summary
-    CLEANING_SUMMARY.write_text(json.dumps(summary, indent=2))
+    path.write_text(json.dumps(summary, indent=2))
     return summary
 
 

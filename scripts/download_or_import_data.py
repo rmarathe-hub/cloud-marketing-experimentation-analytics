@@ -58,6 +58,39 @@ def download_file(url: str, destination: Path, description: str) -> None:
     print(f"  Saved ({size_mb:.1f} MB)")
 
 
+def import_hillstrom_from_path(source: Path, destination: Path | None = None) -> Path:
+    """Copy a local Hillstrom CSV into the raw data directory."""
+    dest = destination or HILLSTROM_RAW_CSV
+    if not source.exists():
+        raise FileNotFoundError(f"Hillstrom source file not found: {source}")
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(source, dest)
+    return dest
+
+
+def import_avazu_from_path(
+    source: Path,
+    destination: Path | None = None,
+    sample_rows: int | None = None,
+) -> Path:
+    """Copy or sample a local Avazu CSV into the raw data directory."""
+    dest = destination or AVAZU_RAW_CSV
+    if not source.exists():
+        raise FileNotFoundError(f"Avazu source file not found: {source}")
+
+    if source.suffix == ".gz":
+        return _sample_avazu_from_gzip(source, dest, sample_rows or DEFAULT_AVAZU_SAMPLE_ROWS)
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    if sample_rows is None:
+        shutil.copy2(source, dest)
+        return dest
+
+    df = pd.read_csv(source, nrows=sample_rows)
+    _write_avazu_csv_from_dataframe(df, dest)
+    return dest
+
+
 def download_hillstrom(force: bool = False) -> Path:
     if HILLSTROM_RAW_CSV.exists() and not force:
         print(f"Hillstrom data already exists: {HILLSTROM_RAW_CSV}")

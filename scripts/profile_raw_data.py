@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import sys
 from datetime import datetime, timezone
+from pathlib import Path
 
 import pandas as pd
 
@@ -43,8 +44,7 @@ def _distribution_summary(series: pd.Series, bins: int = 10) -> dict:
     }
 
 
-def profile_avazu(path: Path) -> dict:
-    df = pd.read_csv(path, low_memory=False)
+def profile_avazu_dataframe(df: pd.DataFrame, source_file: str = "avazu_train.csv") -> dict:
     df = df[pd.to_numeric(df["click"], errors="coerce").isin([0, 1])].copy()
     clicks = pd.to_numeric(df["click"], errors="coerce")
     impressions = len(df)
@@ -56,7 +56,7 @@ def profile_avazu(path: Path) -> dict:
 
     return {
         "dataset": "avazu_mobile_ads",
-        "file": str(path.relative_to(PROJECT_ROOT)),
+        "file": source_file,
         "row_count": impressions,
         "column_count": len(df.columns),
         "columns": list(df.columns),
@@ -94,9 +94,12 @@ def profile_avazu(path: Path) -> dict:
     }
 
 
-def profile_hillstrom(path: Path) -> dict:
-    df = pd.read_csv(path)
+def profile_avazu(path: Path) -> dict:
+    df = pd.read_csv(path, low_memory=False)
+    return profile_avazu_dataframe(df, str(path.relative_to(PROJECT_ROOT)))
 
+
+def profile_hillstrom_dataframe(df: pd.DataFrame, source_file: str = "hillstrom_email.csv") -> dict:
     if "segment" in df.columns:
         treatment_col = "segment"
     elif "treatment" in df.columns:
@@ -140,7 +143,7 @@ def profile_hillstrom(path: Path) -> dict:
 
     return {
         "dataset": "hillstrom_email_experiment",
-        "file": str(path.relative_to(PROJECT_ROOT)),
+        "file": source_file,
         "row_count": recipients,
         "column_count": len(df.columns),
         "columns": list(df.columns),
@@ -171,6 +174,16 @@ def profile_hillstrom(path: Path) -> dict:
             else {}
         ),
     }
+
+
+def profile_hillstrom(path: Path) -> dict:
+    df = pd.read_csv(path)
+    return profile_hillstrom_dataframe(df, str(path.relative_to(PROJECT_ROOT)))
+
+
+def write_profile_summary(summary: dict, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(summary, indent=2))
 
 
 def render_quality_report(summary: dict) -> str:
@@ -341,7 +354,7 @@ def main() -> int:
         },
     }
 
-    RAW_PROFILE_SUMMARY.write_text(json.dumps(summary, indent=2))
+    write_profile_summary(summary, RAW_PROFILE_SUMMARY)
     print(f"Wrote {RAW_PROFILE_SUMMARY}")
 
     report_path = DOCS_DIR / "data_quality_report.md"
