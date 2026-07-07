@@ -1,0 +1,54 @@
+# Environment and secrets
+.env
+.env.local
+*.pem
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Data files (keep repo lightweight)
+data/raw/*
+data/processed/*
+data/marts/*
+data/exports/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/marts/.gitkeep
+!data/exports/.gitkeep
+
+# DuckDB database
+*.duckdb
+*.duckdb.wal
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Tableau
+*.twbx
+*.twb
+!tableau/screenshots/
+
+# Excel outputs (keep screenshots only)
+excel/*.xlsx
+excel/*.xlsm
+
+# Logs
+*.log
